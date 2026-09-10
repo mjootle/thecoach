@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/modernist-7be711ec-820a-4190-ad98-67102e4240dd/styles.css">
+<script src="_ds/modernist-7be711ec-820a-4190-ad98-67102e4240dd/_ds_bundle.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Drill Book">
+<meta name="theme-color" content="#ffffff">
+<meta name="format-detection" content="telephone=no">
+<script src="./drills.data.js"></script>
+<script src="./wake-lock.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; background: var(--color-bg); overscroll-behavior-y: none; }
+  * { -webkit-tap-highlight-color: transparent; }
+  a { color: var(--color-accent-700); }
+  a:hover { color: var(--color-accent); }
+  button:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+  @keyframes drillZoomIn { from { opacity: 0; transform: scale(0.86); } to { opacity: 1; transform: none; } }
+  @keyframes drillZoomOut { from { opacity: 0; transform: scale(1.14); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  input::placeholder { color: var(--color-neutral-600); }
+  [data-panel="settings"] input::placeholder { color: var(--color-neutral-600); }
+  input:focus::placeholder { color: var(--color-neutral-400); }
+</style>
+</helmet>
+
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <rect width="200" height="200" fill="#ec3013"></rect>
+    <circle cx="100" cy="100" r="34" fill="none" stroke="#fff" stroke-width="7"></circle>
+    <polygon points="100,80 118,93 111,114 89,114 82,93" fill="#fff"></polygon>
+  </svg>
+</template>
+
+<div style="min-height:100vh;display:flex;justify-content:center;background:var(--color-neutral-200)">
+<div style="width:100%;max-width:480px;height:100dvh;background:#fff;padding-top:env(safe-area-inset-top);box-sizing:border-box;position:relative;display:flex;flex-direction:column;overflow:hidden;border-left:1px solid var(--color-neutral-300);border-right:1px solid var(--color-neutral-300)">
+  <div data-panel="settings" style="position:absolute;inset:0;background:var(--color-accent);overflow-y:auto;padding:24px 18px calc(28px + env(safe-area-inset-bottom)) 82px;-webkit-overflow-scrolling:touch;z-index:0">
+<div style="display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;align-items:center;gap:12px"><h1 style="flex:1;font-family:var(--font-heading);font-size:34px;font-weight:800;line-height:1.05;letter-spacing:-0.02em;margin:0;color:#fff">Settings</h1><button type="button" onClick="{{ closeSettings }}" style="appearance:none;border:0;background:#fff;padding:0 16px;height:44px;font-family:var(--font-heading);font-size:13px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-accent);cursor:pointer;flex:none" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">{{ settingsDoneLabel }}</button></div>
+        <div style="height:2px;background:#fff"></div>
+        <p style="font-family:var(--font-body);font-size:13px;line-height:1.6;margin:0;color:#fff;opacity:0.85;text-wrap:pretty">Set once. Every new session starts from these.</p>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:#fff;opacity:0.8">Club</span>
+          <input type="text" value="{{ clubName }}" onChange="{{ onClub }}" placeholder="Club name" style="appearance:none;width:100%;box-sizing:border-box;border:1px solid #fff;background:#fff;padding:12px;min-height:46px;font-family:var(--font-body);font-size:14px;color:var(--color-text)">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:#fff;opacity:0.8">Age group</span>
+          <div style="display:flex;gap:0;border:1px solid #fff">
+            <sc-for list="{{ ageOpts }}" as="a" hint-placeholder-count="5">
+              <button type="button" onClick="{{ a.pick }}" style="appearance:none;flex:1;border:0;border-left:{{ a.edge }};background:{{ a.bg }};color:{{ a.ink }};padding:12px 4px;min-height:48px;font-family:var(--font-heading);font-size:14px;font-weight:800;cursor:pointer" style-hover="background:var(--color-accent-600)" style-active="background:#fff;color:var(--color-accent)">{{ a.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="flex:1;font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:#fff;opacity:0.8">Squad size</span>
+          <button type="button" onClick="{{ playersDown }}" aria-label="Fewer players" style="appearance:none;border:1px solid #fff;background:transparent;width:48px;height:48px;font-family:var(--font-heading);font-size:20px;font-weight:800;color:#fff;cursor:pointer" style-hover="background:var(--color-accent-600)" style-active="background:#fff;color:var(--color-accent)">−</button>
+          <span style="min-width:36px;text-align:center;font-family:var(--font-heading);font-size:20px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums">{{ players }}</span>
+          <button type="button" onClick="{{ playersUp }}" aria-label="More players" style="appearance:none;border:1px solid #fff;background:transparent;width:48px;height:48px;font-family:var(--font-heading);font-size:20px;font-weight:800;color:#fff;cursor:pointer" style-hover="background:var(--color-accent-600)" style-active="background:#fff;color:var(--color-accent)">+</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:#fff;opacity:0.8">Target session length</span>
+          <div style="display:flex;gap:0;border:1px solid #fff">
+            <sc-for list="{{ targetOpts }}" as="t" hint-placeholder-count="4">
+              <button type="button" onClick="{{ t.pick }}" style="appearance:none;flex:1;border:0;border-left:{{ t.edge }};background:{{ t.bg }};color:{{ t.ink }};padding:12px 4px;min-height:48px;font-family:var(--font-heading);font-size:14px;font-weight:800;cursor:pointer" style-hover="background:var(--color-accent-600)" style-active="background:#fff;color:var(--color-accent)">{{ t.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+        
+      </div>
+  </div>
+
+  <div style="position:relative;z-index:1;flex:1;min-height:0;display:flex;flex-direction:column;background:#fff;transform:{{ surfaceShift }};transition:transform 340ms cubic-bezier(.22,.61,.36,1);box-shadow:12px 0 30px rgba(0,0,0,0.18)">
+
+  <div style="height:3px;background:var(--color-neutral-200);flex:none">
+    <div style="height:3px;background:var(--color-accent);width:{{ progress }}"></div>
+  </div>
+
+  <sc-if value="{{ showTopBar }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--color-neutral-300);background:#fff;padding:0 8px;flex:none">
+      <button type="button" onClick="{{ goBack }}" aria-label="Back" style="appearance:none;border:0;background:none;width:44px;height:48px;display:flex;align-items:center;justify-content:center;color:var(--color-accent);cursor:pointer" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 5l-7 7 7 7"></path></svg>
+      </button>
+      <span style="flex:1;min-width:0;font-family:var(--font-body);font-size:11px;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-neutral-800);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ crumb }}</span>
+    </div>
+  </sc-if>
+
+  <main ref="{{ mainRef }}" style="flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;padding:20px 18px 26px;-webkit-overflow-scrolling:touch">
+
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:18px;animation:{{ zoomAnim }}">
+        <div style="display:flex;align-items:flex-start;gap:12px">
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px">
+            <span style="font-family:var(--font-body);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700)">Under-12 training</span>
+            <h1 style="font-family:var(--font-heading);font-size:34px;font-weight:800;line-height:1.05;letter-spacing:-0.02em;margin:0;color:var(--color-text);text-wrap:pretty">Drill book</h1>
+          </div>
+          <button type="button" onClick="{{ goFilters }}" aria-label="Filter drills" style="appearance:none;border:1px solid var(--color-neutral-300);background:#fff;height:44px;padding:0 12px;display:flex;align-items:center;gap:6px;color:var(--color-text);cursor:pointer;flex:none" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M6 12h12M10 19h4"></path></svg>
+            <sc-if value="{{ filterBadgeShow }}" hint-placeholder-val="{{ false }}">
+              <span style="font-family:var(--font-heading);font-size:12px;font-weight:800;color:var(--color-accent)">{{ filterBadge }}</span>
+            </sc-if>
+          </button>
+          <button type="button" onClick="{{ goSettings }}" aria-label="Settings" style="appearance:none;border:1px solid var(--color-neutral-300);background:#fff;width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--color-text);cursor:pointer;flex:none;transition:background 120ms" style-hover="background:var(--color-accent);border-color:var(--color-accent);color:#fff" style-active="background:var(--color-accent-700);border-color:var(--color-accent-700);color:#fff">
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          </button>
+        </div>
+        <div style="height:2px;background:var(--color-divider)"></div>
+
+        <div style="display:flex;align-items:center;gap:0;border:1px solid var(--color-neutral-300)">
+          <span style="width:42px;height:46px;display:flex;align-items:center;justify-content:center;color:var(--color-neutral-700);flex:none">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+          </span>
+          <input type="text" value="{{ q }}" onChange="{{ onSearch }}" placeholder="Search drills — passing, 1v1, warm up" style="appearance:none;flex:1;min-width:0;border:0;background:#fff;padding:12px 8px 12px 15px;min-height:46px;font-family:var(--font-body);font-size:15px;color:var(--color-text);outline:none" style-focus="outline:2px solid var(--color-accent);outline-offset:-4px">
+          <sc-if value="{{ searching }}" hint-placeholder-val="{{ false }}">
+            <button type="button" onClick="{{ clearSearch }}" aria-label="Clear search" style="appearance:none;border:0;background:#fff;width:44px;height:46px;display:flex;align-items:center;justify-content:center;color:var(--color-accent);cursor:pointer;flex:none" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+            </button>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ hasSearchHits }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700)">{{ searchCount }}</span>
+            <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:0;border-top:1px solid var(--color-neutral-300)">
+              <sc-for list="{{ searchRows }}" as="d" hint-placeholder-count="5">
+                <li style="border-bottom:1px solid var(--color-neutral-200);display:flex;align-items:stretch">
+                  <button type="button" onClick="{{ d.go }}" style="appearance:none;border:0;background:#fff;flex:1;min-width:0;display:flex;gap:12px;align-items:baseline;text-align:left;padding:13px 2px;min-height:46px;font-family:var(--font-body);font-size:13.5px;color:var(--color-text);cursor:pointer" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+                    <span style="font-family:var(--font-heading);font-weight:800;font-size:12px;color:var(--color-accent-700);min-width:26px">{{ d.num }}</span>
+                    <span style="flex:1">{{ d.name }}</span>
+                    <span style="font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-neutral-700)">{{ d.time }}</span>
+                  </button>
+                  <button type="button" onClick="{{ d.toggleFav }}" aria-label="{{ d.favLabel }}" aria-pressed="{{ d.isFav }}" style="appearance:none;border:0;background:#fff;width:44px;min-height:46px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+                    <svg viewBox="0 0 24 24" width="17" height="17" fill="{{ d.favFill }}" stroke="{{ d.favStroke }}" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21.2l7.7-7.7 1.1-1.1a5.5 5.5 0 0 0 0-7.8z"></path></svg>
+                  </button>
+                </li>
+              </sc-for>
+            </ol>
+          </div>
+        </sc-if>
+        <sc-if value="{{ playerQueryNote }}" hint-placeholder-val="{{ false }}">
+          <p style="font-family:var(--font-body);font-size:14px;line-height:1.6;margin:0;color:var(--color-neutral-800);text-wrap:pretty">Squad-size search needs the minimum and maximum player counts filled in drills.json. Until then, try a category or drill name.</p>
+        </sc-if>
+        <sc-if value="{{ noSearchHits }}" hint-placeholder-val="{{ false }}">
+          <p style="font-family:var(--font-body);font-size:14px;line-height:1.6;margin:0;color:var(--color-neutral-800);text-wrap:pretty">Nothing matches that. Try a drill name, a category like warm up, or words from a drill description.</p>
+        </sc-if>
+
+        <sc-if value="{{ browsing }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <button type="button" onClick="{{ goSession }}" style="appearance:none;border:0;background:var(--color-accent);padding:20px 18px;display:flex;align-items:center;gap:12px;text-align:left;cursor:pointer;min-height:76px" style-hover="background:var(--color-accent-600)" style-active="background:var(--color-accent-700)">
+            <span style="flex:1;font-family:var(--font-heading);font-size:19px;font-weight:800;letter-spacing:-0.01em;color:#fff">Build a session</span>
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2.2" style="flex:none"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </button>
+
+          <sc-if value="{{ hasCurrent }}" hint-placeholder-val="{{ false }}">
+            <button type="button" onClick="{{ goSession }}" style="appearance:none;border:2px solid var(--color-accent);background:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px;text-align:left;cursor:pointer;min-height:68px" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+              <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+                <span style="font-family:var(--font-heading);font-size:15px;font-weight:800;letter-spacing:-0.01em;color:var(--color-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ currentTitle }}</span>
+                <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-neutral-700)">{{ currentMeta }}</span>
+              </span>
+              <span style="font-family:var(--font-heading);font-size:12px;font-weight:800;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-accent);flex:none">{{ continueLabel }}</span>
+            </button>
+          </sc-if>
+        </div>
+
+        <div style="display:flex;align-items:baseline;justify-content:space-between;border-top:2px solid var(--color-divider);padding-top:12px">
+          <span style="font-family:var(--font-heading);font-size:17px;font-weight:800;letter-spacing:-0.01em;color:var(--color-text)">Browse drills</span>
+          <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-neutral-700)">8 categories</span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--color-neutral-300);border:1px solid var(--color-neutral-300)">
+          <sc-for list="{{ homeCards }}" as="c" hint-placeholder-count="8">
+            <button type="button" onClick="{{ c.go }}" style="appearance:none;border:0;background:#fff;display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:16px 14px 18px;text-align:left;cursor:pointer;min-height:118px" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-accent);color:#fff">
+              <span style="font-family:var(--font-heading);font-size:26px;font-weight:800;line-height:1;color:var(--color-accent)">{{ c.short }}</span>
+              <span style="font-family:var(--font-heading);font-size:15px;font-weight:800;line-height:1.15;letter-spacing:-0.01em;color:var(--color-text);text-wrap:pretty">{{ c.label }}</span>
+              <span style="margin-top:auto;font-family:var(--font-body);font-size:10.5px;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-neutral-700)">{{ c.count }}</span>
+            </button>
+          </sc-for>
+        </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isCategory }}" hint-placeholder-val="{{ true }}">
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px;animation:{{ zoomAnim }}">
+        <span style="font-family:var(--font-heading);font-size:64px;font-weight:800;line-height:0.9;letter-spacing:-0.03em;color:var(--color-accent)">{{ catNum }}</span>
+        <h1 style="font-family:var(--font-heading);font-size:34px;font-weight:800;line-height:1.05;letter-spacing:-0.02em;margin:0;color:var(--color-text);text-wrap:pretty">{{ catTitle }}</h1>
+        <div style="height:2px;background:var(--color-divider)"></div>
+        <p style="font-family:var(--font-body);font-size:14px;line-height:1.6;margin:0;color:var(--color-neutral-800);text-wrap:pretty">{{ catBlurb }}</p>
+        <ol style="margin:6px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:0;border-top:1px solid var(--color-neutral-300)">
+          <sc-for list="{{ catDrills }}" as="d" hint-placeholder-count="6">
+            <li style="border-bottom:1px solid var(--color-neutral-200);display:flex;align-items:stretch">
+              <button type="button" onClick="{{ d.go }}" style="appearance:none;border:0;background:#fff;flex:1;min-width:0;display:flex;gap:12px;align-items:baseline;text-align:left;padding:13px 2px;min-height:46px;font-family:var(--font-body);font-size:13.5px;color:var(--color-text);cursor:pointer" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+                <span style="font-family:var(--font-heading);font-weight:800;font-size:12px;color:var(--color-accent-700);min-width:26px">{{ d.num }}</span>
+                <span style="flex:1">{{ d.name }}</span>
+                <span style="font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-neutral-700)">{{ d.time }}</span>
+              </button>
+              <button type="button" onClick="{{ d.toggleFav }}" aria-label="{{ d.favLabel }}" aria-pressed="{{ d.isFav }}" style="appearance:none;border:0;background:#fff;width:44px;min-height:46px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+                <svg viewBox="0 0 24 24" width="17" height="17" fill="{{ d.favFill }}" stroke="{{ d.favStroke }}" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21.2l7.7-7.7 1.1-1.1a5.5 5.5 0 0 0 0-7.8z"></path></svg>
+              </button>
+            </li>
+          </sc-for>
+        </ol>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isFavScreen }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <h1 style="font-family:var(--font-heading);font-size:34px;font-weight:800;line-height:1.05;letter-spacing:-0.02em;margin:0;color:var(--color-text)">Favourites</h1>
+        <div style="height:2px;background:var(--color-divider)"></div>
+        <sc-if value="{{ hasFavs }}" hint-placeholder-val="{{ true }}">
+          <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:0;border-top:1px solid var(--color-neutral-300)">
+            <sc-for list="{{ favDrills }}" as="d" hint-placeholder-count="3">
+              <li style="border-bottom:1px solid var(--color-neutral-200);display:flex;align-items:stretch">
+                <button type="button" onClick="{{ d.go }}" style="appearance:none;border:0;background:#fff;flex:1;min-width:0;display:flex;gap:12px;align-items:baseline;text-align:left;padding:13px 2px;min-height:46px;font-family:var(--font-body);font-size:13.5px;color:var(--color-text);cursor:pointer" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+                  <span style="font-family:var(--font-heading);font-weight:800;font-size:12px;color:var(--color-accent-700);min-width:26px">{{ d.num }}</span>
+                  <span style="flex:1">{{ d.name }}</span>
+                  <span style="font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-neutral-700)">{{ d.time }}</span>
+                </button>
+                <button type="button" onClick="{{ d.toggleFav }}" aria-label="{{ d.favLabel }}" aria-pressed="{{ d.isFav }}" style="appearance:none;border:0;background:#fff;width:44px;min-height:46px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+                  <svg viewBox="0 0 24 24" width="17" height="17" fill="{{ d.favFill }}" stroke="{{ d.favStroke }}" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21.2l7.7-7.7 1.1-1.1a5.5 5.5 0 0 0 0-7.8z"></path></svg>
+                </button>
+              </li>
+            </sc-for>
+          </ol>
+        </sc-if>
+        <sc-if value="{{ noFavs }}" hint-placeholder-val="{{ false }}">
+          <p style="font-family:var(--font-body);font-size:14px;line-height:1.6;margin:0;color:var(--color-neutral-800);text-wrap:pretty">Save drills you use regularly and they'll appear here. Tap the heart on any drill.</p>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isRunning }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;display:flex;flex-direction:column;gap:14px">
+        <span style="font-family:var(--font-heading);font-size:14px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent)">Drill {{ runNum }}</span>
+        <h1 style="font-family:var(--font-heading);font-size:34px;font-weight:800;line-height:1.02;letter-spacing:-0.02em;margin:0;color:var(--color-text);text-wrap:pretty">{{ runName }}</h1>
+        <span style="font-family:var(--font-body);font-size:13px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-neutral-800)">{{ runCat }}</span>
+
+        <div style="border-top:2px solid var(--color-divider);border-bottom:2px solid var(--color-divider);padding:10px 0;display:flex;align-items:center;justify-content:space-between;gap:10px">
+          <span style="font-family:var(--font-heading);font-size:88px;font-weight:800;line-height:1;letter-spacing:-0.04em;color:{{ runClockInk }};font-variant-numeric:tabular-nums">{{ runClock }}</span>
+          <button type="button" onClick="{{ runReset }}" style="appearance:none;border:1px solid var(--color-neutral-300);background:#fff;padding:0 14px;height:52px;display:flex;align-items:center;gap:6px;font-family:var(--font-body);font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-text);cursor:pointer;flex:none" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg>Reset
+          </button>
+        </div>
+
+        <button type="button" onClick="{{ runPause }}" style="appearance:none;border:0;background:var(--color-accent);padding:22px 18px;text-align:left;font-family:var(--font-heading);font-size:17px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:#fff;cursor:pointer;min-height:72px" style-hover="background:var(--color-accent-600)" style-active="background:var(--color-accent-700)">{{ runPauseLabel }}</button>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--color-neutral-300);border:1px solid var(--color-neutral-300)">
+          <button type="button" onClick="{{ runPrev }}" style="appearance:none;border:0;background:#fff;padding:20px 14px;text-align:left;font-family:var(--font-heading);font-size:14px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:var(--color-text);cursor:pointer;min-height:64px;opacity:{{ runPrevDim }}" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">Previous</button>
+          <button type="button" onClick="{{ runNext }}" style="appearance:none;border:0;background:#fff;padding:20px 14px;text-align:left;font-family:var(--font-heading);font-size:14px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:var(--color-text);cursor:pointer;min-height:64px;opacity:{{ runNextDim }}" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">Next drill</button>
+        </div>
+
+        <div style="display:flex;justify-content:center;border-top:1px solid var(--color-neutral-300);border-bottom:1px solid var(--color-neutral-300);padding:12px 0">{{ runSketch }}</div>
+
+        <div style="display:flex;flex-direction:column;gap:0">
+          <div style="padding:12px 0;border-bottom:1px solid var(--color-neutral-200)">
+            <span style="display:block;font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:5px">Equipment</span>
+            <span style="font-family:var(--font-body);font-size:16px;line-height:1.5;color:var(--color-text)">{{ runKit }}</span>
+          </div>
+          <div style="padding:12px 0;border-bottom:1px solid var(--color-neutral-200)">
+            <span style="display:block;font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:5px">Setup</span>
+            <span style="font-family:var(--font-body);font-size:16px;line-height:1.55;color:var(--color-text)">{{ runSetup }}</span>
+          </div>
+          <sc-if value="{{ hasRunSteps }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:12px 0;border-bottom:1px solid var(--color-neutral-200)">
+              <span style="display:block;font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:5px">Instructions</span>
+              <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px">
+                <sc-for list="{{ runSteps }}" as="s" hint-placeholder-count="3">
+                  <li style="display:flex;gap:8px;font-family:var(--font-body);font-size:16px;line-height:1.5;color:var(--color-text)"><span style="font-weight:700;color:var(--color-accent-700)">{{ s.n }}</span><span style="flex:1">{{ s.text }}</span></li>
+                </sc-for>
+              </ol>
+            </div>
+          </sc-if>
+          <div style="padding:12px 0">
+            <span style="display:block;font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:5px">Coaching points</span>
+            <span style="font-family:var(--font-body);font-size:16px;line-height:1.55;color:var(--color-text)">{{ runCoach }}</span>
+          </div>
+        </div>
+
+        <button type="button" onClick="{{ runEnd }}" style="appearance:none;border:1px solid var(--color-neutral-300);background:#fff;padding:16px;text-align:left;font-family:var(--font-body);font-size:13px;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-neutral-800);cursor:pointer;min-height:52px" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">End session</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isFiltersScreen }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:flex-start;gap:12px">
+          <h1 style="flex:1;font-family:var(--font-heading);font-size:34px;font-weight:800;line-height:1.05;letter-spacing:-0.02em;margin:0;color:var(--color-text)">Filter</h1>
+          <button type="button" onClick="{{ clearFilters }}" style="appearance:none;border:0;background:var(--color-neutral-200);padding:0 12px;height:34px;font-family:var(--font-body);font-size:10.5px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:{{ clearInkFilters }};cursor:pointer;flex:none" style-hover="background:var(--color-neutral-300)" style-active="background:var(--color-accent);color:#fff">Clear filters</button>
+          <button type="button" onClick="{{ goHome }}" aria-label="Close filters" style="appearance:none;border:1px solid var(--color-neutral-300);background:#fff;width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--color-text);cursor:pointer;flex:none" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+          </button>
+        </div>
+        <div style="height:2px;background:var(--color-divider)"></div>
+        <span style="font-family:var(--font-heading);font-size:20px;font-weight:800;color:var(--color-text)">{{ matchLabel }}</span>
+
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700)">Category</span>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <sc-for list="{{ catChips }}" as="c" hint-placeholder-count="8">
+              <button type="button" onClick="{{ c.pick }}" style="appearance:none;border:{{ c.edge }};background:{{ c.bg }};color:{{ c.ink }};padding:0 12px;height:38px;font-family:var(--font-body);font-size:13px;cursor:pointer" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">{{ c.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700)">Maximum duration</span>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <sc-for list="{{ durChips }}" as="c" hint-placeholder-count="4">
+              <button type="button" onClick="{{ c.pick }}" style="appearance:none;border:{{ c.edge }};background:{{ c.bg }};color:{{ c.ink }};padding:0 12px;height:38px;font-family:var(--font-body);font-size:13px;cursor:pointer" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">{{ c.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <sc-if value="{{ hasKitFacet }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700)">Equipment</span>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <sc-for list="{{ kitChips }}" as="c" hint-placeholder-count="6">
+                <button type="button" onClick="{{ c.pick }}" style="appearance:none;border:{{ c.edge }};background:{{ c.bg }};color:{{ c.ink }};padding:0 12px;height:38px;font-family:var(--font-body);font-size:13px;cursor:pointer" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">{{ c.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ hasAgeFacet }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700)">Age group</span>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <sc-for list="{{ ageChips }}" as="c" hint-placeholder-count="4">
+                <button type="button" onClick="{{ c.pick }}" style="appearance:none;border:{{ c.edge }};background:{{ c.bg }};color:{{ c.ink }};padding:0 12px;height:38px;font-family:var(--font-body);font-size:13px;cursor:pointer" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">{{ c.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ hasPlayerFacet }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700)">Players available</span>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <sc-for list="{{ playerChips }}" as="c" hint-placeholder-count="5">
+                <button type="button" onClick="{{ c.pick }}" style="appearance:none;border:{{ c.edge }};background:{{ c.bg }};color:{{ c.ink }};padding:0 14px;height:38px;font-family:var(--font-body);font-size:13px;cursor:pointer" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">{{ c.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ hasDiffFacet }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700)">Difficulty</span>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <sc-for list="{{ diffChips }}" as="c" hint-placeholder-count="3">
+                <button type="button" onClick="{{ c.pick }}" style="appearance:none;border:{{ c.edge }};background:{{ c.bg }};color:{{ c.ink }};padding:0 12px;height:38px;font-family:var(--font-body);font-size:13px;cursor:pointer" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">{{ c.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ hasMissingFacets }}" hint-placeholder-val="{{ false }}">
+          <p style="font-family:var(--font-body);font-size:12px;line-height:1.5;margin:0;color:var(--color-neutral-700);text-wrap:pretty">Filters for {{ missingFacets }} appear once those fields are filled in drills.json.</p>
+        </sc-if>
+
+        <sc-if value="{{ hasResults }}" hint-placeholder-val="{{ true }}">
+          <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:0;border-top:2px solid var(--color-divider)">
+            <sc-for list="{{ resultRows }}" as="d" hint-placeholder-count="6">
+              <li style="border-bottom:1px solid var(--color-neutral-200);display:flex;align-items:stretch">
+                <button type="button" onClick="{{ d.go }}" style="appearance:none;border:0;background:#fff;flex:1;min-width:0;display:flex;gap:12px;align-items:baseline;text-align:left;padding:13px 2px;min-height:46px;font-family:var(--font-body);font-size:13.5px;color:var(--color-text);cursor:pointer" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+                  <span style="font-family:var(--font-heading);font-weight:800;font-size:12px;color:var(--color-accent-700);min-width:26px">{{ d.num }}</span>
+                  <span style="flex:1">{{ d.name }}</span>
+                  <span style="font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-neutral-700)">{{ d.time }}</span>
+                </button>
+                <button type="button" onClick="{{ d.toggleFav }}" aria-label="{{ d.favLabel }}" aria-pressed="{{ d.isFav }}" style="appearance:none;border:0;background:#fff;width:44px;min-height:46px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+                  <svg viewBox="0 0 24 24" width="17" height="17" fill="{{ d.favFill }}" stroke="{{ d.favStroke }}" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21.2l7.7-7.7 1.1-1.1a5.5 5.5 0 0 0 0-7.8z"></path></svg>
+                </button>
+              </li>
+            </sc-for>
+          </ol>
+        </sc-if>
+        <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+          <p style="font-family:var(--font-body);font-size:14px;line-height:1.6;margin:0;color:var(--color-neutral-800);text-wrap:pretty">No drills match. Loosen a filter or tap Clear filters.</p>
+        </sc-if>
+      </div>
+    </sc-if>
+
+
+    <sc-if value="{{ isPlanScreen }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <h1 style="font-family:var(--font-heading);font-size:34px;font-weight:800;line-height:1.05;letter-spacing:-0.02em;margin:0;color:var(--color-text)">Session</h1>
+        <div style="height:2px;background:var(--color-divider)"></div>
+
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <input type="text" value="{{ sessionName }}" onChange="{{ onName }}" placeholder="Session name" style="appearance:none;width:100%;box-sizing:border-box;border:1px solid var(--color-neutral-300);background:#fff;padding:13px 12px;min-height:48px;font-family:var(--font-body);font-size:15px;color:var(--color-text)">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:-4px">
+            <button type="button" onClick="{{ useDate }}" style="appearance:none;border:0;background:var(--color-neutral-200);padding:0 10px;height:30px;display:flex;align-items:center;gap:6px;font-family:var(--font-body);font-size:10.5px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-accent-700);cursor:pointer;max-width:100%" style-hover="background:var(--color-neutral-300)" style-active="background:var(--color-accent);color:#fff">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" style="flex:none"><path d="M12 5v14M5 12h14"></path></svg><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ todayLabel }}</span>
+            </button>
+            <button type="button" onClick="{{ useClubDate }}" style="appearance:none;border:0;background:var(--color-neutral-200);padding:0 10px;height:30px;display:flex;align-items:center;gap:6px;font-family:var(--font-body);font-size:10.5px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-accent-700);cursor:pointer;opacity:{{ clubDateDim }};max-width:100%" style-hover="background:var(--color-neutral-300)" style-active="background:var(--color-accent);color:#fff">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" style="flex:none"><path d="M12 5v14M5 12h14"></path></svg><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ clubDateLabel }}</span>
+            </button>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;border-top:1px solid var(--color-neutral-300);border-bottom:1px solid var(--color-neutral-300);padding:10px 0">
+            <span style="flex:1;min-width:0;font-family:var(--font-body);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-neutral-800);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ setupSummary }}</span>
+            <button type="button" onClick="{{ goSettings }}" style="appearance:none;border:0;background:var(--color-neutral-200);padding:0 12px;height:30px;font-family:var(--font-body);font-size:10.5px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-accent-700);cursor:pointer;flex:none" style-hover="background:var(--color-neutral-300)" style-active="background:var(--color-accent);color:#fff">Change</button>
+          </div>
+        </div>
+
+        <sc-if value="{{ hasSession }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:0">
+            <div style="border-top:2px solid var(--color-divider);padding-top:12px;display:flex;align-items:baseline;justify-content:space-between">
+              <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700)">{{ targetLabel }}</span>
+              <span style="font-family:var(--font-heading);font-size:26px;font-weight:800;color:{{ barInk }};font-variant-numeric:tabular-nums">{{ sessionTotal }}</span>
+            </div>
+            <div style="height:6px;background:var(--color-neutral-200);margin:8px 0 6px">
+              <div style="height:6px;background:{{ barInk }};width:{{ barFill }}"></div>
+            </div>
+            <span style="padding-bottom:12px;font-family:var(--font-body);font-size:12px;letter-spacing:0.04em;text-transform:uppercase;color:{{ diffInk }}">{{ diffText }}</span>
+            <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:0;border-top:1px solid var(--color-neutral-300)">
+              <sc-for list="{{ sessionRows }}" as="r" hint-placeholder-count="3">
+                <li style="border-bottom:1px solid var(--color-neutral-200);display:flex;align-items:center;gap:8px;padding:8px 0">
+                  <button type="button" onClick="{{ r.go }}" style="appearance:none;border:0;background:#fff;flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;align-items:flex-start;text-align:left;padding:6px 2px;min-height:44px;cursor:pointer" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+                    <span style="display:flex;gap:8px;align-items:baseline;width:100%">
+                      <span style="font-family:var(--font-heading);font-weight:800;font-size:12px;color:var(--color-accent-700);min-width:22px">{{ r.order }}</span>
+                      <span style="flex:1;font-family:var(--font-body);font-size:13.5px;color:var(--color-text)">{{ r.name }}</span>
+                    </span>
+                    <span style="padding-left:30px;font-family:var(--font-body);font-size:10.5px;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-neutral-700)">{{ r.cat }}</span>
+                  </button>
+                  <span style="display:flex;gap:0;flex:none;align-items:center;border:1px solid var(--color-neutral-300)">
+                    <button type="button" onClick="{{ r.less }}" aria-label="Reduce duration" style="appearance:none;border:0;background:#fff;width:40px;height:44px;font-family:var(--font-heading);font-size:18px;font-weight:800;color:var(--color-text);cursor:pointer" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">−</button>
+                    <span style="min-width:44px;text-align:center;font-family:var(--font-body);font-size:12px;letter-spacing:0.04em;color:var(--color-text);font-variant-numeric:tabular-nums">{{ r.time }}</span>
+                    <button type="button" onClick="{{ r.more }}" aria-label="Increase duration" style="appearance:none;border:0;background:#fff;width:40px;height:44px;font-family:var(--font-heading);font-size:18px;font-weight:800;color:var(--color-text);cursor:pointer" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">+</button>
+                  </span>
+                  <span style="display:flex;gap:0;flex:none">
+                    <button type="button" onClick="{{ r.up }}" aria-label="Move up" style="appearance:none;border:1px solid var(--color-neutral-300);background:#fff;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:{{ r.upDim }}" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--color-text)" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"></path></svg>
+                    </button>
+                    <button type="button" onClick="{{ r.down }}" aria-label="Move down" style="appearance:none;border:1px solid var(--color-neutral-300);border-left:0;background:#fff;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:{{ r.downDim }}" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--color-text)" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"></path></svg>
+                    </button>
+                    <button type="button" onClick="{{ r.remove }}" aria-label="{{ r.removeLabel }}" style="appearance:none;border:1px solid var(--color-neutral-300);border-left:0;background:#fff;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-accent)">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--color-accent)" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+                    </button>
+                  </span>
+                </li>
+              </sc-for>
+            </ol>
+          </div>
+        </sc-if>
+        <sc-if value="{{ noSession }}" hint-placeholder-val="{{ false }}">
+          <p style="font-family:var(--font-body);font-size:14px;line-height:1.6;margin:0;color:var(--color-neutral-800);text-wrap:pretty">No drills yet. Open a drill and tap Add to session to build tonight's plan.</p>
+        </sc-if>
+
+        <div style="display:flex;flex-direction:column;gap:1px;background:var(--color-neutral-300);border:1px solid var(--color-neutral-300)">
+          <button type="button" onClick="{{ onStart }}" style="appearance:none;border:0;background:var(--color-accent);padding:20px 16px;text-align:left;font-family:var(--font-body);font-size:14px;letter-spacing:0.06em;text-transform:uppercase;color:#fff;cursor:pointer;min-height:64px" style-hover="background:var(--color-accent-600)" style-active="background:var(--color-accent-700)">Start session</button>
+          <button type="button" onClick="{{ onSave }}" style="appearance:none;border:0;background:#fff;padding:18px 16px;text-align:left;font-family:var(--font-body);font-size:13px;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-text);cursor:pointer;min-height:56px" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">{{ saveLabel }}</button>
+          <button type="button" onClick="{{ onClear }}" style="appearance:none;border:0;background:#fff;padding:18px 16px;text-align:left;font-family:var(--font-body);font-size:13px;letter-spacing:0.06em;text-transform:uppercase;color:{{ clearInk }};cursor:pointer;min-height:56px" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">{{ clearLabel }}</button>
+        </div>
+
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isSavedScreen }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <sc-if value="{{ isSavedDetail }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <button type="button" onClick="{{ detailBack }}" style="appearance:none;border:0;background:none;padding:0;text-align:left;font-family:var(--font-body);font-size:10.5px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-accent-700);cursor:pointer;min-height:30px">← All saved sessions</button>
+            <h1 style="font-family:var(--font-heading);font-size:30px;font-weight:800;line-height:1.05;letter-spacing:-0.02em;margin:0;color:var(--color-text);text-wrap:pretty">{{ detailName }}</h1>
+            <span style="font-family:var(--font-body);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-neutral-700)">{{ detailMeta }}</span>
+            <span style="font-family:var(--font-body);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-neutral-700)">{{ detailDate }}</span>
+            <div style="border-top:2px solid var(--color-divider);padding-top:12px;display:flex;align-items:baseline;justify-content:space-between">
+              <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700)">Total</span>
+              <span style="font-family:var(--font-heading);font-size:26px;font-weight:800;color:var(--color-text);font-variant-numeric:tabular-nums">{{ detailTotal }}</span>
+            </div>
+            <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:0;border-top:1px solid var(--color-neutral-300)">
+              <sc-for list="{{ detailRows }}" as="r" hint-placeholder-count="4">
+                <li style="border-bottom:1px solid var(--color-neutral-200);display:flex;gap:10px;align-items:baseline;padding:12px 2px">
+                  <span style="font-family:var(--font-heading);font-weight:800;font-size:12px;color:var(--color-accent-700);min-width:22px">{{ r.order }}</span>
+                  <span style="flex:1;font-family:var(--font-body);font-size:13.5px;color:var(--color-text)">{{ r.name }}</span>
+                  <span style="font-family:var(--font-body);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-neutral-700)">{{ r.time }}</span>
+                </li>
+              </sc-for>
+            </ol>
+            <div style="display:flex;flex-direction:column;gap:1px;background:var(--color-neutral-300);border:1px solid var(--color-neutral-300)">
+              <button type="button" onClick="{{ detailStart }}" style="appearance:none;border:0;background:var(--color-accent);padding:20px 16px;text-align:left;font-family:var(--font-body);font-size:14px;letter-spacing:0.06em;text-transform:uppercase;color:#fff;cursor:pointer;min-height:64px" style-hover="background:var(--color-accent-600)" style-active="background:var(--color-accent-700)">Start session</button>
+              <button type="button" onClick="{{ detailEdit }}" style="appearance:none;border:0;background:#fff;padding:18px 16px;text-align:left;font-family:var(--font-body);font-size:13px;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-text);cursor:pointer;min-height:56px" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">Edit in planner</button>
+              <button type="button" onClick="{{ detailDuplicate }}" style="appearance:none;border:0;background:#fff;padding:18px 16px;text-align:left;font-family:var(--font-body);font-size:13px;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-text);cursor:pointer;min-height:56px" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">Duplicate</button>
+              <button type="button" onClick="{{ detailDelete }}" style="appearance:none;border:0;background:#fff;padding:18px 16px;text-align:left;font-family:var(--font-body);font-size:13px;letter-spacing:0.06em;text-transform:uppercase;color:{{ detailDeleteInk }};cursor:pointer;min-height:56px" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">{{ detailDeleteLabel }}</button>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ hasSaved }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:18px">
+            <h1 style="font-family:var(--font-heading);font-size:34px;font-weight:800;line-height:1.05;letter-spacing:-0.02em;margin:0;color:var(--color-text)">Saved sessions</h1>
+            <div style="height:2px;background:var(--color-divider)"></div>
+            <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:0;border-top:1px solid var(--color-neutral-300)">
+              <sc-for list="{{ savedList }}" as="e" hint-placeholder-count="3">
+                <li style="border-bottom:1px solid var(--color-neutral-200)">
+                  <button type="button" onClick="{{ e.open }}" style="appearance:none;border:0;background:#fff;width:100%;display:flex;flex-direction:column;gap:4px;align-items:flex-start;text-align:left;padding:14px 2px;min-height:54px;cursor:pointer" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+                    <span style="font-family:var(--font-body);font-size:14px;color:var(--color-text)">{{ e.name }}</span>
+                    <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-neutral-700)">{{ e.meta }}</span>
+                    <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-neutral-700)">{{ e.date }}</span>
+                  </button>
+                </li>
+              </sc-for>
+            </ol>
+          </div>
+        </sc-if>
+        <sc-if value="{{ noSaved }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:18px">
+            <h1 style="font-family:var(--font-heading);font-size:34px;font-weight:800;line-height:1.05;letter-spacing:-0.02em;margin:0;color:var(--color-text)">Saved sessions</h1>
+            <div style="height:2px;background:var(--color-divider)"></div>
+            <p style="font-family:var(--font-body);font-size:14px;line-height:1.6;margin:0;color:var(--color-neutral-800);text-wrap:pretty">Nothing saved yet. Build a plan on the Session screen and tap Save session.</p>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isDrill }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:16px;animation:{{ zoomAnim }}">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-family:var(--font-heading);font-size:13px;font-weight:800;color:var(--color-accent);letter-spacing:0.04em">{{ drillNum }}</span>
+          <span style="font-family:var(--font-body);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-neutral-700)">{{ drillTime }}</span>
+          <button type="button" onClick="{{ toggleDrillFav }}" aria-label="{{ drillFavLabel }}" aria-pressed="{{ drillIsFav }}" style="appearance:none;border:1px solid var(--color-neutral-300);background:#fff;margin-left:auto;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="{{ drillFavFill }}" stroke="{{ drillFavStroke }}" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21.2l7.7-7.7 1.1-1.1a5.5 5.5 0 0 0 0-7.8z"></path></svg>
+          </button>
+        </div>
+        <h1 style="font-family:var(--font-heading);font-size:28px;font-weight:800;line-height:1.08;letter-spacing:-0.02em;margin:0;color:var(--color-text);text-wrap:pretty">{{ drillName }}</h1>
+        <button type="button" onClick="{{ addToSession }}" style="appearance:none;border:1px solid var(--color-neutral-300);background:{{ addBg }};width:100%;display:flex;align-items:center;gap:8px;padding:13px 14px;min-height:46px;text-align:left;font-family:var(--font-body);font-size:13px;letter-spacing:0.06em;text-transform:uppercase;color:{{ addInk }};cursor:pointer" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="flex:none"><path d="M12 5v14M5 12h14"></path></svg>{{ addLabel }}
+        </button>
+        <div style="border-top:2px solid var(--color-divider);border-bottom:1px solid var(--color-neutral-300);padding:14px 0;display:flex;justify-content:center">{{ sketch }}</div>
+        <p style="font-family:var(--font-body);font-size:15px;line-height:1.6;margin:0;color:var(--color-text);text-wrap:pretty">{{ drillSetup }}</p>
+        <div style="display:flex;flex-direction:column;gap:0;border-top:1px solid var(--color-neutral-300)">
+          <div style="padding:12px 0;border-bottom:1px solid var(--color-neutral-200)">
+            <span style="display:block;font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:4px">Equipment</span>
+            <span style="font-family:var(--font-body);font-size:14px;line-height:1.55;color:var(--color-text)">{{ drillKit }}</span>
+          </div>
+          <div style="padding:12px 0;border-bottom:1px solid var(--color-neutral-200)">
+            <span style="display:block;font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:4px">Coaching points</span>
+            <span style="font-family:var(--font-body);font-size:14px;line-height:1.55;color:var(--color-text)">{{ drillCoach }}</span>
+          </div>
+          <div style="padding:12px 0">
+            <span style="display:block;font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:4px">Make it harder</span>
+            <span style="font-family:var(--font-body);font-size:14px;line-height:1.55;color:var(--color-text)">{{ drillProg }}</span>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+  </main>
+
+  <nav style="position:sticky;bottom:0;background:#fff;border-top:2px solid var(--color-divider);display:{{ stepNavDisplay }};grid-template-columns:1fr 1fr;gap:0">
+    <button type="button" onClick="{{ prev }}" style="appearance:none;border:0;border-right:1px solid var(--color-neutral-300);background:#fff;padding:16px 18px;text-align:left;font-family:var(--font-body);font-size:13px;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-text);cursor:pointer;min-height:52px" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">Back</button>
+    <button type="button" onClick="{{ next }}" style="appearance:none;border:0;background:var(--color-accent);padding:16px 18px;text-align:left;font-family:var(--font-body);font-size:13px;letter-spacing:0.06em;text-transform:uppercase;color:#fff;cursor:pointer;min-height:52px" style-hover="background:var(--color-accent-600)" style-active="background:var(--color-accent-700)">Next</button>
+  </nav>
+
+  <div style="display:flex;gap:0;border-top:2px solid var(--color-divider);background:#fff;padding-bottom:env(safe-area-inset-bottom)">
+    <button type="button" onClick="{{ goHome }}" style="appearance:none;border:0;border-top:{{ tabHomeEdge }};background:#fff;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 4px 10px;font-family:var(--font-heading);font-size:10px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:{{ tabHomeInk }};cursor:pointer;min-height:58px" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+      <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>Home
+    </button>
+    <button type="button" onClick="{{ goFavs }}" style="appearance:none;border:0;border-top:{{ tabFavEdge }};background:#fff;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 4px 10px;font-family:var(--font-heading);font-size:10px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:{{ tabFavInk }};cursor:pointer;min-height:58px" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+      <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21.2l7.7-7.7 1.1-1.1a5.5 5.5 0 0 0 0-7.8z"></path></svg>Favourites
+    </button>
+    <button type="button" onClick="{{ goSession }}" style="appearance:none;border:0;border-top:{{ tabSessionEdge }};background:#fff;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 4px 10px;font-family:var(--font-heading);font-size:10px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:{{ tabSessionInk }};cursor:pointer;min-height:58px" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+      <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"></path></svg>Session
+    </button>
+    <button type="button" onClick="{{ goSaved }}" style="appearance:none;border:0;border-top:{{ tabSavedEdge }};background:#fff;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 4px 10px;font-family:var(--font-heading);font-size:10px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:{{ tabSavedInk }};cursor:pointer;min-height:58px" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+      <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>Plans
+    </button>
+  </div>
+
+  </div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:480,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  static SHORT = {
+    "Warm-up and activation": "Warm-up",
+    "Ball control and dribbling": "Dribbling",
+    "Passing and receiving": "Passing",
+    "Shooting and finishing": "Shooting",
+    "Defending one against one": "Defending",
+    "Small-sided games": "Games",
+    "Fitness and agility": "Fitness",
+    "Goalkeeping": "Goalkeeping"
+  };
+
+  static mins(d) {
+    return d && d.durationMinutes != null ? d.durationMinutes + ' min' : '';
+  }
+
+  static FAV_KEY = 'u12-drill-favourites';
+
+  static readFavs() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(Component.FAV_KEY) || '[]');
+      return Array.isArray(raw) ? raw.filter((x) => typeof x === 'string') : [];
+    } catch (e) { return []; }
+  }
+
+  static SESSION_KEY = 'u12-drill-session';
+  static META_KEY = 'u12-session-meta';
+  static DUR_KEY = 'u12-session-durations';
+  static SAVED_KEY = 'u12-saved-sessions';
+  static RUN_KEY = 'u12-run-state';
+  static TARGETS = [45, 60, 75, 90];
+  static AGES = ['U8', 'U10', 'U12', 'U14', 'U16'];
+
+  static readObj(key, fallback) {
+    try {
+      const raw = JSON.parse(localStorage.getItem(key) || 'null');
+      return raw && typeof raw === 'object' ? raw : fallback;
+    } catch (e) { return fallback; }
+  }
+
+  static today() {
+    const d = new Date();
+    const m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][d.getMonth()];
+    return d.getDate() + ' ' + m + ' ' + d.getFullYear();
+  }
+
+  static dateLabel(iso) {
+    const d = new Date(iso);
+    if (isNaN(d)) return '';
+    const m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][d.getMonth()];
+    return d.getDate() + ' ' + m + ' ' + d.getFullYear();
+  }
+
+  static KIT_VOCAB = [
+    ['cones', /cone/],
+    ['balls', /ball/],
+    ['bibs', /bib/],
+    ['small goals', /small goal|cone goal/],
+    ['goals', /goal/],
+    ['keeper', /keeper|glove/]
+  ];
+
+  static NUMWORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
+
+  static searchQuery(q) {
+    let s = ' ' + String(q).toLowerCase().trim() + ' ';
+    const phrases = [];
+    let players = null;
+    s = s.replace(/(\d+)\s*players?/g, (m, n) => { players = +n; return ' '; });
+    s = s.replace(/(\d+)\s*(?:v|vs|against)\s*(\d+)/g, (m, a, b) => {
+      const wa = Component.NUMWORDS[+a] || a, wb = Component.NUMWORDS[+b] || b;
+      phrases.push(wa + ' against ' + wb);
+      return ' ';
+    });
+    s = s.replace(/warm\s*[- ]?\s*up/g, ' warm-up ');
+    const terms = s.split(/[\s,]+/).filter(Boolean);
+    return { terms, phrases, players };
+  }
+
+  static stem(word) {
+    let w = String(word).toLowerCase();
+    if (w.length > 5 && /ing$/.test(w)) {
+      w = w.slice(0, -3);
+      if (/([bdgklmnprt])\1$/.test(w)) w = w.slice(0, -1);
+    } else if (w.length > 4 && /(ies)$/.test(w)) w = w.slice(0, -3) + 'y';
+    else if (w.length > 4 && /(es)$/.test(w)) w = w.slice(0, -2);
+    else if (w.length > 3 && /s$/.test(w) && !/ss$/.test(w)) w = w.slice(0, -1);
+    if (w.length > 4 && /ed$/.test(w)) w = w.slice(0, -2);
+    return w;
+  }
+
+  static stemText(text) {
+    return ' ' + String(text).toLowerCase().split(/[^a-z0-9]+/).filter(Boolean).map(Component.stem).join(' ') + ' ';
+  }
+
+  static hasTerm(stemmed, term) {
+    const phrase = term.split(/[^a-z0-9]+/).filter(Boolean).map(Component.stem).join(' ');
+    if (!phrase) return true;
+    return stemmed.indexOf(' ' + phrase + ' ') >= 0;
+  }
+
+  static drillText(d) {
+    return [
+      d.num, d.title, d.setup, (d.instructions || []).join(' '),
+      d.coachingPoints, (d.tags || []).join(' ')
+    ].join(' ').toLowerCase();
+  }
+
+  static kitTokens(list) {
+    const text = (list || []).join(' , ').toLowerCase();
+    return Component.KIT_VOCAB.filter(([, re]) => re.test(text)).map(([t]) => t);
+  }
+
+  static titleCase(s) {
+    return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+  }
+
+  static EMPTY_FILTERS = { ages: [], cats: [], diffs: [], kit: [], players: null, maxDur: null };
+
+  static matches(d, f) {
+    if (f.cats.length && f.cats.indexOf(d.category) < 0) return false;
+    if (f.maxDur != null && (d.durationMinutes || 0) > f.maxDur) return false;
+    if (f.diffs.length && f.diffs.indexOf(d.difficulty) < 0) return false;
+    if (f.ages.length && !(d.ageGroups || []).some((a) => f.ages.indexOf(a) >= 0)) return false;
+    if (f.kit.length) {
+      const toks = Component.kitTokens(d.equipment);
+      if (!f.kit.some((k) => toks.indexOf(k) >= 0)) return false;
+    }
+    if (f.players != null) {
+      if (d.minPlayers != null && d.minPlayers > f.players) return false;
+      if (d.maxPlayers != null && d.maxPlayers < f.players) return false;
+    }
+    return true;
+  }
+
+  static clock(sec) {
+    const s = Math.max(0, Math.round(sec));
+    return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+  }
+
+  static readList(key) {
+    try {
+      const raw = JSON.parse(localStorage.getItem(key) || '[]');
+      return Array.isArray(raw) ? raw.filter((x) => typeof x === 'string') : [];
+    } catch (e) { return []; }
+  }
+
+  state = {
+    cats: null, i: 0, favs: Component.readFavs(),
+    session: Component.readList(Component.SESSION_KEY),
+    justAdded: false,
+    meta: Component.readObj(Component.META_KEY, { name: '', age: '', players: 12, target: 60 }),
+    durs: Component.readObj(Component.DUR_KEY, {}),
+    saved: (function () { const v = Component.readObj(Component.SAVED_KEY, []); return Array.isArray(v) ? v : []; })(),
+    savedFlash: false, confirmClear: false, confirmDelete: null, openSaved: null,
+    filters: Object.assign({}, Component.EMPTY_FILTERS), q: '',
+    run: null
+  };
+
+  put(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {}
+    return value;
+  }
+
+  setMeta(patch) {
+    this.setState((s) => ({ meta: this.put(Component.META_KEY, Object.assign({}, s.meta, patch)) }));
+  }
+
+  bumpDur(id, base, step) {
+    this.setState((s) => {
+      const cur = s.durs[id] != null ? s.durs[id] : base;
+      const next = Math.min(60, Math.max(1, cur + step));
+      return { durs: this.put(Component.DUR_KEY, Object.assign({}, s.durs, { [id]: next })) };
+    });
+  }
+
+  migrateSaved() {
+    this.setState((s) => {
+      let changed = false;
+      const saved = s.saved.map((e) => {
+        const needs = !e.createdAt || e.totalMinutes == null || (e.drills || []).some((d) => !d.title || d.minutes == null);
+        if (!needs) return e;
+        changed = true;
+        const drills = (e.drills || []).map((d, n) => {
+          const src = this.drillById(d.id);
+          return {
+            id: d.id,
+            order: n + 1,
+            title: d.title || (src ? src.title : d.id),
+            category: d.category || (src ? src.category : ''),
+            minutes: d.minutes != null ? d.minutes : this.minutesFor(d.id, {})
+          };
+        });
+        return Object.assign({}, e, {
+          id: e.id || Component.uid(),
+          club: e.club || '',
+          drills,
+          totalMinutes: drills.reduce((n, d) => n + d.minutes, 0),
+          createdAt: e.createdAt || (e.savedAt ? e.savedAt + 'T00:00:00.000Z' : new Date().toISOString())
+        });
+      });
+      return changed ? { saved: this.put(Component.SAVED_KEY, saved) } : null;
+    });
+  }
+
+  toggleFilter(key, value) {
+    this.setState((s) => {
+      const list = s.filters[key];
+      const next = list.indexOf(value) >= 0 ? list.filter((v) => v !== value) : list.concat(value);
+      return { filters: Object.assign({}, s.filters, { [key]: next }) };
+    });
+  }
+
+  setFilter(key, value) {
+    this.setState((s) => ({ filters: Object.assign({}, s.filters, { [key]: s.filters[key] === value ? null : value }) }));
+  }
+
+  clearFilters() {
+    this.setState({ filters: Object.assign({}, Component.EMPTY_FILTERS) });
+  }
+
+  drillById(id) {
+    const cats = this.state.cats || [];
+    for (const c of cats) { const hit = c.drills.find((d) => d.id === id); if (hit) return hit; }
+    return null;
+  }
+
+  minutesFor(id, durs) {
+    if (durs[id] != null) return durs[id];
+    const d = this.drillById(id);
+    return d && d.durationMinutes ? d.durationMinutes : 0;
+  }
+
+  static uid() {
+    return 'ses-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+  }
+
+  saveSession() {
+    this.setState((s) => {
+      const drills = s.session.map((id, n) => {
+        const d = this.drillById(id);
+        return { id, order: n + 1, title: d ? d.title : id, category: d ? d.category : '', minutes: this.minutesFor(id, s.durs) };
+      });
+      const entry = {
+        id: Component.uid(),
+        name: (s.meta.name || '').trim() || 'Untitled session',
+        club: s.meta.club || '',
+        age: s.meta.age || '',
+        players: s.meta.players || 0,
+        target: s.meta.target || 0,
+        drills,
+        totalMinutes: drills.reduce((n, d) => n + d.minutes, 0),
+        createdAt: new Date().toISOString()
+      };
+      return { saved: this.put(Component.SAVED_KEY, [entry].concat(s.saved).slice(0, 50)), savedFlash: true };
+    });
+    clearTimeout(this._saveTimer);
+    this._saveTimer = setTimeout(() => this.setState({ savedFlash: false }), 1800);
+  }
+
+  loadSaved(entry) {
+    const durs = {};
+    entry.drills.forEach((d) => { if (d.minutes != null) durs[d.id] = d.minutes; });
+    this.setState((s) => ({
+      session: this.persistSession(entry.drills.map((d) => d.id)),
+      durs: this.put(Component.DUR_KEY, durs),
+      meta: this.put(Component.META_KEY, {
+        name: entry.name, club: entry.club || s.meta.club || '', age: entry.age, players: entry.players, target: entry.target
+      })
+    }));
+  }
+
+  duplicateSaved(entry) {
+    this.setState((s) => {
+      const copy = Object.assign({}, entry, {
+        id: Component.uid(),
+        name: entry.name + ' (copy)',
+        createdAt: new Date().toISOString(),
+        drills: entry.drills.map((d) => Object.assign({}, d))
+      });
+      return { saved: this.put(Component.SAVED_KEY, [copy].concat(s.saved).slice(0, 50)), openSaved: copy.id };
+    });
+  }
+
+  deleteSaved(id) {
+    if (this.state.confirmDelete !== id) {
+      this.setState({ confirmDelete: id });
+      clearTimeout(this._delTimer);
+      this._delTimer = setTimeout(() => this.setState({ confirmDelete: null }), 4000);
+      return;
+    }
+    clearTimeout(this._delTimer);
+    this.setState((s) => ({
+      saved: this.put(Component.SAVED_KEY, s.saved.filter((e) => e.id !== id)),
+      confirmDelete: null,
+      openSaved: s.openSaved === id ? null : s.openSaved
+    }));
+  }
+
+  clearSession() {
+    if (!this.state.confirmClear) {
+      this.setState({ confirmClear: true });
+      clearTimeout(this._clearTimer);
+      this._clearTimer = setTimeout(() => this.setState({ confirmClear: false }), 3000);
+      return;
+    }
+    clearTimeout(this._clearTimer);
+    this.setState({ session: this.put(Component.SESSION_KEY, []), durs: this.put(Component.DUR_KEY, {}), confirmClear: false, run: null });
+  }
+
+  setRun(run) {
+    try {
+      if (run) localStorage.setItem(Component.RUN_KEY, JSON.stringify(run));
+      else localStorage.removeItem(Component.RUN_KEY);
+    } catch (e) {}
+    return run;
+  }
+
+  runTicker() {
+    clearInterval(this._tick);
+    this._tick = setInterval(() => {
+      this.setState((s) => {
+        if (!s.run || s.run.paused || !s.run.endsAt) return null;
+        const left = Math.max(0, Math.round((s.run.endsAt - Date.now()) / 1000));
+        return left === s.run.left ? null : { run: Object.assign({}, s.run, { left }) };
+      });
+    }, 500);
+  }
+
+  startRun(list) {
+    if (!list.length) return;
+    const screens = this.state.screens || [];
+    const at = screens.findIndex((s) => s.type === 'session');
+    const secs = (list[0].mins || 0) * 60;
+    const run = this.setRun({ idx: 0, left: secs, paused: false, endsAt: Date.now() + secs * 1000 });
+    this.setState(at >= 0 ? { run, i: at } : { run });
+    this.toTop();
+    this.runTicker();
+    if (window.DrillWakeLock) window.DrillWakeLock.enable();
+  }
+
+  stopRun() {
+    clearInterval(this._tick);
+    this.setRun(null);
+    this.setState({ run: null });
+    if (window.DrillWakeLock) window.DrillWakeLock.disable();
+  }
+
+  runStep(list, d) {
+    this.setState((s) => {
+      if (!s.run) return null;
+      const idx = s.run.idx + d;
+      if (idx < 0 || idx >= list.length) return null;
+      const secs = (list[idx].mins || 0) * 60;
+      return { run: this.setRun({ idx, left: secs, paused: false, endsAt: Date.now() + secs * 1000 }) };
+    });
+  }
+
+  runToggle() {
+    this.setState((s) => {
+      if (!s.run) return null;
+      const paused = !s.run.paused;
+      return { run: this.setRun(Object.assign({}, s.run, { paused, endsAt: paused ? null : Date.now() + s.run.left * 1000 })) };
+    });
+  }
+
+  runReset(list) {
+    this.setState((s) => {
+      if (!s.run) return null;
+      const secs = ((list[s.run.idx] && list[s.run.idx].mins) || 0) * 60;
+      return { run: this.setRun(Object.assign({}, s.run, { left: secs, endsAt: s.run.paused ? null : Date.now() + secs * 1000 })) };
+    });
+  }
+
+  restoreRun(sessionLength) {
+    const saved = Component.readObj(Component.RUN_KEY, null);
+    if (!saved || typeof saved.idx !== 'number' || saved.idx >= sessionLength) return;
+    const left = saved.paused || !saved.endsAt ? (saved.left || 0) : Math.max(0, Math.round((saved.endsAt - Date.now()) / 1000));
+    const at = (this.state.screens || []).findIndex((s) => s.type === 'session');
+    this.setState(at >= 0 ? { run: Object.assign({}, saved, { left }), i: at } : { run: Object.assign({}, saved, { left }) });
+    this.runTicker();
+    if (window.DrillWakeLock) window.DrillWakeLock.enable();
+  }
+
+  persistSession(session) {
+    try { localStorage.setItem(Component.SESSION_KEY, JSON.stringify(session)); } catch (e) {}
+    return session;
+  }
+
+  addToSession(id) {
+    this.setState((s) => {
+      if (s.session.includes(id)) return { justAdded: true };
+      return { session: this.persistSession(s.session.concat(id)), justAdded: true };
+    });
+    clearTimeout(this._addTimer);
+    this._addTimer = setTimeout(() => this.setState({ justAdded: false }), 1600);
+  }
+
+  removeFromSession(id) {
+    this.setState((s) => ({ session: this.persistSession(s.session.filter((x) => x !== id)) }));
+  }
+
+  moveInSession(id, dir) {
+    this.setState((s) => {
+      const list = s.session.slice();
+      const a = list.indexOf(id), b = a + dir;
+      if (a < 0 || b < 0 || b >= list.length) return null;
+      list[a] = list[b];
+      list[b] = id;
+      return { session: this.persistSession(list) };
+    });
+  }
+
+  toggleFav(id) {
+    this.setState((s) => {
+      const favs = s.favs.includes(id) ? s.favs.filter((x) => x !== id) : s.favs.concat(id);
+      try { localStorage.setItem(Component.FAV_KEY, JSON.stringify(favs)); } catch (e) {}
+      return { favs };
+    });
+  }
+
+  favRow(dd, screens, favs) {
+    const on = favs.includes(dd.id);
+    return {
+      num: dd.num, name: dd.title, time: Component.mins(dd),
+      isFav: on,
+      favFill: on ? 'var(--color-accent)' : 'none',
+      favStroke: on ? 'var(--color-accent)' : 'var(--color-neutral-700)',
+      favLabel: (on ? 'Remove ' : 'Save ') + dd.title + (on ? ' from favourites' : ' to favourites'),
+      toggleFav: () => this.toggleFav(dd.id),
+      go: () => this.goTo(screens.findIndex((s) => s.drill === dd))
+    };
+  }
+  main = React.createRef();
+
+  toTop() {
+    if (this.main.current) this.main.current.scrollTop = 0;
+  }
+
+  load() {
+    const data = window.U12_DRILL_DATA;
+    if (!data || !data.categories) return false;
+    const cats = data.categories
+      .map((c) => Object.assign({}, c, { drills: data.drills.filter((d) => d.category === c.id) }))
+      .filter((c) => c.drills.length);
+    const screens = [{ type: 'home' }, { type: 'favs' }, { type: 'session' }, { type: 'saved' }, { type: 'filters' }];
+    cats.forEach((c) => {
+      screens.push({ type: 'cat', cat: c });
+      c.drills.forEach((d) => screens.push({ type: 'drill', cat: c, drill: d }));
+    });
+    this.setState({ cats, screens, i: 0 }, () => {
+      this.migrateSaved();
+      this.restoreRun(this.state.session.length);
+    });
+    return true;
+  }
+
+  componentDidMount() {
+    if (!this.load()) {
+      let tries = 0;
+      this._poll = setInterval(() => {
+        if (this.load() || ++tries > 100) clearInterval(this._poll);
+      }, 50);
+    }
+    this._key = (e) => {
+      if (e.key === 'ArrowRight') this.move(1);
+      if (e.key === 'ArrowLeft') this.move(-1);
+    };
+    window.addEventListener('keydown', this._key);
+    this._ts = null;
+    this._start = (e) => { this._ts = e.touches[0].clientX; };
+    this._end = (e) => {
+      if (this._ts === null) return;
+      const dx = e.changedTouches[0].clientX - this._ts;
+      if (Math.abs(dx) > 55) this.move(dx < 0 ? 1 : -1);
+      this._ts = null;
+    };
+    window.addEventListener('touchstart', this._start, { passive: true });
+    window.addEventListener('touchend', this._end, { passive: true });
+  }
+
+  componentWillUnmount() {
+    if (this._poll) clearInterval(this._poll);
+    clearTimeout(this._addTimer);
+    clearTimeout(this._saveTimer);
+    clearTimeout(this._clearTimer);
+    clearInterval(this._tick);
+    window.removeEventListener('keydown', this._key);
+    window.removeEventListener('touchstart', this._start);
+    window.removeEventListener('touchend', this._end);
+  }
+
+  move(d) {
+    this.setState({ zoom: null });
+    this.setState((s) => {
+      if (!s.screens) return null;
+      const i = Math.min(s.screens.length - 1, Math.max(0, s.i + d));
+      try { localStorage.setItem('u12-drill-cards-index', String(i)); } catch (e) {}
+      return { i };
+    });
+    this.toTop();
+  }
+
+  goTo(i) {
+    const s = this.state.screens || [];
+    const from = s[this.state.i], to = s[i];
+    let zoom = null;
+    if (from && to) {
+      const depth = (x) => (x.type === 'home' ? 0 : x.type === 'cat' ? 1 : x.type === 'drill' ? 2 : 0);
+      if (depth(to) > depth(from)) zoom = 'drillZoomIn 240ms ease-out';
+      else if (depth(to) < depth(from)) zoom = 'drillZoomOut 240ms ease-out';
+    }
+    this.setState({ i, zoom });
+    try { localStorage.setItem('u12-drill-cards-index', String(i)); } catch (e) {}
+    this.toTop();
+  }
+
+  renderVals() {
+    const { screens, cats, i, favs } = this.state;
+    const cur = screens ? screens[i] : null;
+    const isCat = !!cur && cur.type === 'cat';
+    const isHome = !!cur && cur.type === 'home';
+    const isFavScreen = !!cur && cur.type === 'favs';
+    const isSessionScreen = !!cur && cur.type === 'session';
+    const d = cur && cur.drill;
+    const allDrills = (cats || []).reduce((acc, c) => acc.concat(c.drills), []);
+    const saved = allDrills.filter((dd) => favs.includes(dd.id));
+    const dFav = !!d && favs.includes(d.id);
+    const session = this.state.session;
+    const byId = {};
+    const catOf = {};
+    const catFull = {};
+    (cats || []).forEach((c) => c.drills.forEach((dd) => {
+      byId[dd.id] = dd;
+      catOf[dd.id] = Component.SHORT[c.title] || c.title;
+      catFull[dd.id] = c.title;
+    }));
+    const durs = this.state.durs, meta = this.state.meta, run = this.state.run;
+    const sessionDrills = session.map((id) => byId[id]).filter(Boolean)
+      .map((dd) => Object.assign({ mins: durs[dd.id] != null ? durs[dd.id] : (dd.durationMinutes || 0) }, dd));
+    const totalMins = sessionDrills.reduce((n, dd) => n + dd.mins, 0);
+    const diff = totalMins - (meta.target || 0);
+    const runDrill = run ? sessionDrills[run.idx] : null;
+    const isSaved = !!cur && cur.type === 'saved';
+    const isFilters = !!cur && cur.type === 'filters';
+    const f = this.state.filters;
+    const chip = (on) => ({
+      bg: on ? 'var(--color-accent)' : '#fff',
+      ink: on ? '#fff' : 'var(--color-text)',
+      edge: on ? '1px solid var(--color-accent)' : '1px solid var(--color-neutral-300)'
+    });
+    const uniq = (arr) => arr.filter((v, n) => v != null && v !== '' && arr.indexOf(v) === n);
+    const facetAges = uniq(allDrills.reduce((a, dd) => a.concat(dd.ageGroups || []), []));
+    const facetDiffs = uniq(allDrills.map((dd) => dd.difficulty));
+    const kitSeen = uniq(allDrills.reduce((a, dd) => a.concat(Component.kitTokens(dd.equipment)), []));
+    const facetKit = Component.KIT_VOCAB.map(([t]) => t).filter((t) => kitSeen.indexOf(t) >= 0);
+    const hasPlayerData = allDrills.some((dd) => dd.minPlayers != null || dd.maxPlayers != null);
+    const filterResults = allDrills.filter((dd) => Component.matches(dd, f));
+    const sq = Component.searchQuery(this.state.q);
+    const searchActive = sq.terms.length > 0 || sq.phrases.length > 0 || sq.players != null;
+    const searchHits = searchActive
+      ? allDrills.filter((dd) => {
+          if (!Component.matches(dd, f)) return false;
+          const text = Component.stemText(Component.drillText(dd));
+          const withCat = Component.stemText(Component.drillText(dd) + ' ' + (catFull[dd.id] || ''));
+          if (!sq.phrases.every((t) => Component.hasTerm(text, t))) return false;
+          if (!sq.terms.every((t) => Component.hasTerm(withCat, t))) return false;
+          if (sq.players != null) {
+            if (dd.minPlayers == null && dd.maxPlayers == null) return false;
+            if (dd.minPlayers != null && dd.minPlayers > sq.players) return false;
+            if (dd.maxPlayers != null && dd.maxPlayers < sq.players) return false;
+          }
+          return true;
+        })
+      : [];
+    const playerQueryUnsupported = sq.players != null && !allDrills.some((dd) => dd.minPlayers != null || dd.maxPlayers != null);
+    const activeCount = f.ages.length + f.cats.length + f.diffs.length + f.kit.length + (f.players != null ? 1 : 0) + (f.maxDur != null ? 1 : 0);
+    const openEntry = this.state.saved.find((e) => e.id === this.state.openSaved) || null;
+    const inSession = !!d && session.includes(d.id);
+    return {
+      isHome,
+      isSessionScreen,
+      hasSession: isSessionScreen && !run && sessionDrills.length > 0,
+      noSession: isSessionScreen && !run && sessionDrills.length === 0,
+      isPlanScreen: isSessionScreen && !run,
+      sessionCount: sessionDrills.length === 1 ? '1 drill' : sessionDrills.length + ' drills',
+      sessionTotal: totalMins + ' min',
+      targetLabel: meta.target ? 'Target ' + meta.target + ' min' : 'No target set',
+      diffText: !meta.target ? '' : (diff === 0 ? 'On target' : Math.abs(diff) + ' min ' + (diff > 0 ? 'over target' : 'under target')),
+      diffInk: diff > 0 ? 'var(--color-accent)' : 'var(--color-neutral-800)',
+      barFill: meta.target ? Math.min(100, totalMins / meta.target * 100) + '%' : '0%',
+      barInk: diff > 0 ? 'var(--color-accent)' : 'var(--color-text)',
+      sessionName: meta.name || '',
+      onName: (e) => this.setMeta({ name: e.target.value }),
+      clubName: meta.club || '',
+      onClub: (e) => this.setMeta({ club: e.target.value }),
+      todayLabel: Component.today(),
+      clubDateLabel: (meta.club || '').trim() ? (meta.club || '').trim() + ' · ' + Component.today() : 'Club + date',
+      clubDateDim: (meta.club || '').trim() ? '1' : '0.4',
+      useDate: () => this.setMeta({ name: Component.today() }),
+      useClubDate: () => { const c = (meta.club || '').trim(); if (c) this.setMeta({ name: c + ' · ' + Component.today() }); },
+      players: String(meta.players || 0),
+      playersDown: () => this.setMeta({ players: Math.max(1, (meta.players || 1) - 1) }),
+      playersUp: () => this.setMeta({ players: Math.min(30, (meta.players || 0) + 1) }),
+      ageOpts: Component.AGES.map((a, n) => ({
+        label: a,
+        edge: n === 0 ? '0' : '1px solid var(--color-neutral-300)',
+        bg: meta.age === a ? 'var(--color-accent)' : '#fff',
+        ink: meta.age === a ? '#fff' : 'var(--color-text)',
+        pick: () => this.setMeta({ age: meta.age === a ? '' : a })
+      })),
+      targetOpts: Component.TARGETS.map((t, n) => ({
+        label: t + ' min',
+        edge: n === 0 ? '0' : '1px solid var(--color-neutral-300)',
+        bg: meta.target === t ? 'var(--color-accent)' : '#fff',
+        ink: meta.target === t ? '#fff' : 'var(--color-text)',
+        pick: () => this.setMeta({ target: t })
+      })),
+      saveLabel: this.state.savedFlash ? 'Saved' : 'Save session',
+      onSave: () => this.saveSession(),
+      onStart: () => this.startRun(sessionDrills),
+      clearLabel: this.state.confirmClear ? 'Tap again to clear' : 'Clear session',
+      clearInk: this.state.confirmClear ? 'var(--color-accent)' : 'var(--color-neutral-800)',
+      onClear: () => this.clearSession(),
+      isSavedScreen: isSaved,
+      goSaved: () => this.goTo(screens.findIndex((s) => s.type === 'saved')),
+      savedSummary: this.state.saved.length === 1 ? '1 session' : this.state.saved.length + ' sessions',
+      savedList: this.state.saved.map((e) => ({
+        name: e.name,
+        meta: [e.age, e.players ? e.players + ' players' : '', e.drills.length === 1 ? '1 drill' : e.drills.length + ' drills', (e.totalMinutes || 0) + ' min'].filter(Boolean).join(' · '),
+        date: Component.dateLabel(e.createdAt),
+        open: () => this.setState({ openSaved: e.id })
+      })),
+      hasSaved: isSaved && !openEntry && this.state.saved.length > 0,
+      noSaved: isSaved && !openEntry && this.state.saved.length === 0,
+      isSavedDetail: isSaved && !!openEntry,
+      detailName: openEntry ? openEntry.name : '',
+      detailMeta: openEntry ? [openEntry.age, openEntry.players ? openEntry.players + ' players' : '', openEntry.target ? 'target ' + openEntry.target + ' min' : ''].filter(Boolean).join(' · ') : '',
+      detailDate: openEntry ? 'Created ' + Component.dateLabel(openEntry.createdAt) : '',
+      detailTotal: openEntry ? (openEntry.totalMinutes || 0) + ' min' : '',
+      detailRows: openEntry ? openEntry.drills.map((d, n) => ({
+        order: String(n + 1).padStart(2, '0'),
+        name: d.title || d.id,
+        time: d.minutes + ' min'
+      })) : [],
+      detailBack: () => this.setState({ openSaved: null, confirmDelete: null }),
+      detailEdit: () => { if (openEntry) { this.loadSaved(openEntry); this.setState({ openSaved: null }); this.goTo(screens.findIndex((s) => s.type === 'session')); } },
+      detailDuplicate: () => { if (openEntry) this.duplicateSaved(openEntry); },
+      detailStart: () => {
+        if (!openEntry) return;
+        this.loadSaved(openEntry);
+        this.setState({ openSaved: null });
+        const list = openEntry.drills.map((d) => ({ id: d.id, title: d.title, mins: d.minutes }));
+        setTimeout(() => this.startRun(list), 0);
+      },
+      detailDelete: () => { if (openEntry) this.deleteSaved(openEntry.id); },
+      detailDeleteLabel: openEntry && this.state.confirmDelete === openEntry.id ? 'Tap again to delete' : 'Delete session',
+      detailDeleteInk: openEntry && this.state.confirmDelete === openEntry.id ? 'var(--color-accent)' : 'var(--color-neutral-800)',
+      isRunning: !!run && isSessionScreen,
+      runNum: run ? run.idx + 1 + ' of ' + sessionDrills.length : '',
+      runName: runDrill ? runDrill.title : '',
+      runCat: runDrill ? (catOf[runDrill.id] || '') : '',
+      runClock: run ? Component.clock(run.left) : '',
+      runClockInk: run && run.left === 0 ? 'var(--color-accent)' : 'var(--color-text)',
+      runPauseLabel: run && run.paused ? 'Start timer' : 'Pause timer',
+      runPrevDim: run && run.idx === 0 ? '0.3' : '1',
+      runNextDim: run && run.idx >= sessionDrills.length - 1 ? '0.3' : '1',
+      runKit: runDrill ? (runDrill.equipment || []).join(', ') : '',
+      runSetup: runDrill ? runDrill.setup : '',
+      runCoach: runDrill ? runDrill.coachingPoints : '',
+      runSteps: runDrill && Array.isArray(runDrill.instructions) ? runDrill.instructions.map((t, n) => ({ n: n + 1 + '.', text: t })) : [],
+      hasRunSteps: !!(runDrill && Array.isArray(runDrill.instructions) && runDrill.instructions.length),
+      runSketch: runDrill && runDrill.diagram ? React.createElement('svg', {
+        viewBox: runDrill.diagram.viewBox || '0 0 120 90',
+        style: { width: '100%', maxWidth: '320px', background: '#fff', border: '1px solid var(--color-neutral-300)' },
+        dangerouslySetInnerHTML: { __html: runDrill.diagram.svg || '' }
+      }) : null,
+      runReset: () => this.runReset(sessionDrills),
+      runPause: () => this.runToggle(),
+      runPrev: () => this.runStep(sessionDrills, -1),
+      runNext: () => this.runStep(sessionDrills, 1),
+      runEnd: () => this.stopRun(),
+      sessionSummary: (sessionDrills.length === 1 ? '1 drill' : sessionDrills.length + ' drills') + ' · ' + totalMins + ' min',
+      goSession: () => this.goTo(screens.findIndex((s) => s.type === 'session')),
+      settingsOpen: !!this.state.settingsOpen,
+      surfaceShift: this.state.settingsOpen ? 'translateX(calc(-100% + 64px))' : 'translateX(0)',
+      settingsDoneLabel: JSON.stringify(meta) !== this.state.metaSnapshot ? 'Save & close' : 'Close',
+      goSettings: () => this.setState((s) => ({ settingsOpen: !s.settingsOpen, metaSnapshot: JSON.stringify(s.meta) })),
+      closeSettings: () => this.setState({ settingsOpen: false }),
+      setupSummary: [meta.age || 'Any age', (meta.target || 0) + ' min target', (meta.players || 0) + ' players'].join(' · '),
+      sessionRows: isSessionScreen ? sessionDrills.map((dd, n) => ({
+        order: String(n + 1).padStart(2, '0'),
+        name: dd.title,
+        cat: catOf[dd.id] || '',
+        time: dd.mins + ' min',
+        less: () => this.bumpDur(dd.id, dd.durationMinutes || 0, -1),
+        more: () => this.bumpDur(dd.id, dd.durationMinutes || 0, 1),
+        upDim: n === 0 ? '0.3' : '1',
+        downDim: n === sessionDrills.length - 1 ? '0.3' : '1',
+        up: () => this.moveInSession(dd.id, -1),
+        down: () => this.moveInSession(dd.id, 1),
+        remove: () => this.removeFromSession(dd.id),
+        removeLabel: 'Remove ' + dd.title + ' from session',
+        go: () => this.goTo(screens.findIndex((s) => s.drill === dd))
+      })) : [],
+      addLabel: this.state.justAdded && inSession ? 'Added to session' : (inSession ? 'In this session' : 'Add to session'),
+      addBg: inSession ? 'var(--color-neutral-200)' : '#fff',
+      addInk: inSession ? 'var(--color-neutral-800)' : 'var(--color-text)',
+      addToSession: () => { if (d) this.addToSession(d.id); },
+      isFavScreen,
+      hasFavs: isFavScreen && saved.length > 0,
+      noFavs: isFavScreen && saved.length === 0,
+      favCount: saved.length === 1 ? '1 drill' : saved.length + ' drills',
+      favDrills: isFavScreen ? saved.map((dd) => this.favRow(dd, screens, favs)) : [],
+      goFavs: () => this.goTo(screens.findIndex((s) => s.type === 'favs')),
+      drillIsFav: dFav,
+      drillFavFill: dFav ? 'var(--color-accent)' : 'none',
+      drillFavStroke: dFav ? 'var(--color-accent)' : 'var(--color-neutral-700)',
+      drillFavLabel: dFav ? 'Remove from favourites' : 'Save to favourites',
+      toggleDrillFav: () => { if (d) this.toggleFav(d.id); },
+      homeCards: (cats || []).map((c) => ({
+        short: String(parseInt(c.num, 10)),
+        label: Component.SHORT[c.title] || c.title,
+        count: c.drills.length + ' drills',
+        go: () => this.goTo(screens.findIndex((s) => s.type === 'cat' && s.cat === c))
+      })),
+      crumb: cur && cur.cat ? cur.cat.num + ' / ' + cur.cat.title : 'Drill book',
+      counter: screens ? i + 1 + ' of ' + screens.length : '',
+      progress: screens ? ((i + 1) / screens.length * 100).toFixed(1) + '%' : '0%',
+      isCategory: isCat,
+      isDrill: !!d,
+      catNum: isCat ? cur.cat.num : '',
+      catTitle: isCat ? cur.cat.title : '',
+      catBlurb: isCat ? (cur.cat.intro || cur.cat.drills.length + ' drills. Swipe or press next to work through them.') : '',
+      mainRef: this.main,
+      catDrills: isCat ? cur.cat.drills.map((dd) => this.favRow(dd, screens, favs)) : [],
+      drillNum: d ? d.num : '',
+      drillName: d ? d.title : '',
+      drillTime: d ? Component.mins(d) : '',
+      drillSetup: d ? d.setup : '',
+      drillKit: d ? (d.equipment || []).join(', ') : '',
+      drillCoach: d ? d.coachingPoints : '',
+      drillProg: d ? d.progression : '',
+      sketch: d ? React.createElement('svg', {
+        viewBox: (d.diagram && d.diagram.viewBox) || '0 0 120 90',
+        style: { width: '100%', maxWidth: '260px', background: '#fff', border: '1px solid var(--color-neutral-300)' },
+        dangerouslySetInnerHTML: { __html: (d.diagram && d.diagram.svg) || '' }
+      }) : null,
+      catJumps: (cats || []).map((c) => ({
+        short: String(parseInt(c.num, 10)),
+        label: Component.SHORT[c.title] || c.title,
+        edge: cur && cur.cat === c ? '3px solid var(--color-accent)' : '1px solid var(--color-neutral-300)',
+        ink: cur && cur.cat === c ? 'var(--color-text)' : 'var(--color-neutral-800)',
+        go: () => this.goTo(screens.findIndex((s) => s.type === 'cat' && s.cat === c))
+      })),
+      goHome: () => this.goTo(0),
+      zoomAnim: this.state.zoom || 'none',
+      hasCurrent: sessionDrills.length > 0,
+      currentTitle: run ? 'Session in progress' : ((meta.name || '').trim() || 'Current session'),
+      currentMeta: (sessionDrills.length === 1 ? '1 drill' : sessionDrills.length + ' drills') + ' · ' + totalMins + ' min',
+      continueLabel: run ? 'Resume' : 'Continue',
+      q: this.state.q,
+      onSearch: (e) => this.setState({ q: e.target.value }),
+      clearSearch: () => this.setState({ q: '' }),
+      searching: isHome && searchActive,
+      browsing: isHome && !searchActive,
+      playerQueryNote: playerQueryUnsupported,
+      searchCount: (searchHits.length === 1 ? '1 drill' : searchHits.length + ' drills') + (activeCount ? ' · ' + activeCount + ' filter' + (activeCount === 1 ? '' : 's') + ' active' : ''),
+      searchRows: isHome ? searchHits.map((dd) => this.favRow(dd, screens, favs)) : [],
+      noSearchHits: isHome && searchActive && searchHits.length === 0 && !playerQueryUnsupported,
+      hasSearchHits: isHome && searchActive && searchHits.length > 0,
+      isFiltersScreen: isFilters,
+      goFilters: () => this.goTo(screens.findIndex((s) => s.type === 'filters')),
+      filterBadge: activeCount ? String(activeCount) : '',
+      filterBadgeShow: activeCount > 0,
+      matchLabel: filterResults.length === 1 ? '1 matching drill' : filterResults.length + ' matching drills',
+      hasResults: isFilters && filterResults.length > 0,
+      noResults: isFilters && filterResults.length === 0,
+      clearFilters: () => this.clearFilters(),
+      clearInkFilters: activeCount ? 'var(--color-accent)' : 'var(--color-neutral-700)',
+      catChips: (cats || []).map((c) => Object.assign({
+        label: Component.SHORT[c.title] || c.title,
+        pick: () => this.toggleFilter('cats', c.id)
+      }, chip(f.cats.indexOf(c.id) >= 0))),
+      durChips: [10, 15, 20, 30].map((m) => Object.assign({
+        label: '≤ ' + m + ' min',
+        pick: () => this.setFilter('maxDur', m)
+      }, chip(f.maxDur === m))),
+      ageChips: facetAges.map((a) => Object.assign({ label: a, pick: () => this.toggleFilter('ages', a) }, chip(f.ages.indexOf(a) >= 0))),
+      hasAgeFacet: facetAges.length > 0,
+      diffChips: facetDiffs.map((v) => Object.assign({ label: Component.titleCase(v), pick: () => this.toggleFilter('diffs', v) }, chip(f.diffs.indexOf(v) >= 0))),
+      hasDiffFacet: facetDiffs.length > 0,
+      kitChips: facetKit.map((k) => Object.assign({ label: Component.titleCase(k), pick: () => this.toggleFilter('kit', k) }, chip(f.kit.indexOf(k) >= 0))),
+      hasKitFacet: facetKit.length > 0,
+      hasPlayerFacet: hasPlayerData,
+      playerChips: [6, 8, 10, 12, 16].map((n) => Object.assign({ label: String(n), pick: () => this.setFilter('players', n) }, chip(f.players === n))),
+      missingFacets: [!facetAges.length ? 'age group' : '', !facetDiffs.length ? 'difficulty' : '', !hasPlayerData ? 'player counts' : ''].filter(Boolean).join(', '),
+      hasMissingFacets: isFilters && (!facetAges.length || !facetDiffs.length || !hasPlayerData),
+      resultRows: isFilters ? filterResults.map((dd) => this.favRow(dd, screens, favs)) : [],
+      showTopBar: isCat || !!d,
+      stepNavDisplay: d ? 'grid' : 'none',
+      goBack: () => {
+        if (d) { const at = screens.findIndex((s) => s.type === 'cat' && s.cat === cur.cat); this.goTo(at >= 0 ? at : 0); }
+        else this.goTo(0);
+      },
+      tabHomeEdge: isHome ? '3px solid var(--color-accent)' : '0',
+      tabHomeInk: isHome ? 'var(--color-accent)' : 'var(--color-neutral-800)',
+      tabFavEdge: isFavScreen ? '3px solid var(--color-accent)' : '0',
+      tabFavInk: isFavScreen ? 'var(--color-accent)' : 'var(--color-neutral-800)',
+      tabSessionEdge: isSessionScreen ? '3px solid var(--color-accent)' : '0',
+      tabSessionInk: isSessionScreen ? 'var(--color-accent)' : 'var(--color-neutral-800)',
+      tabSavedEdge: isSaved ? '3px solid var(--color-accent)' : '0',
+      tabSavedInk: isSaved ? 'var(--color-accent)' : 'var(--color-neutral-800)',
+      prev: () => this.move(-1),
+      next: () => this.move(1)
+    };
+  }
+}
+</script>
+</body>
+</html>
