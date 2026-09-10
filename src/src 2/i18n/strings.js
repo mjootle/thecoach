@@ -1,0 +1,277 @@
+// Generated from i18n/*.json — do not edit by hand.
+// Regenerate whenever a language file changes, or the app shows stale text.
+window.U12_I18N = {
+ "en": {
+  "$meta": {
+   "locale": "en",
+   "name": "English",
+   "englishName": "English",
+   "base": true
+  },
+  "app": {
+   "title": "Drill book",
+   "kicker": "Under-12 training"
+  },
+  "tabs": {
+   "home": "Home",
+   "favourites": "Favourites",
+   "session": "Session",
+   "plans": "Plans"
+  },
+  "nav": {
+   "back": "Back",
+   "next": "Next",
+   "change": "Change"
+  },
+  "home": {
+   "search_placeholder": "Search drills — passing, 1v1, warm up",
+   "clear_search": "Clear search",
+   "build_session": "Build a session",
+   "continue": "Continue",
+   "session_in_progress": "Session in progress",
+   "browse": "Browse drills",
+   "filter_drills": "Filter drills",
+   "settings": "Settings",
+   "no_results": "Nothing matches that. Try a drill name, a category like warm up, or words from a drill description.",
+   "player_query_note": "Squad-size search needs the minimum and maximum player counts filled in drills.json. Until then, try a category or drill name.",
+   "current_session": "Current session"
+  },
+  "favourites": {
+   "title": "Favourites",
+   "empty": "Save drills you use regularly and they'll appear here. Tap the heart on any drill.",
+   "add": "Save to favourites",
+   "remove": "Remove from favourites",
+   "add_named": "Save {name} to favourites",
+   "remove_named": "Remove {name} from favourites"
+  },
+  "drill": {
+   "add_to_session": "Add to session",
+   "in_session": "In this session",
+   "added": "Added to session",
+   "remove_from_session": "Remove {name} from session",
+   "equipment": "Equipment",
+   "coaching_points": "Coaching points",
+   "setup": "Setup",
+   "instructions": "Instructions",
+   "make_harder": "Make it harder"
+  },
+  "filters": {
+   "title": "Filter",
+   "clear": "Clear filters",
+   "close": "Close filters",
+   "category": "Category",
+   "max_duration": "Maximum duration",
+   "equipment": "Equipment",
+   "age_group": "Age group",
+   "players_available": "Players available",
+   "difficulty": "Difficulty",
+   "empty": "No drills match. Loosen a filter or tap Clear filters.",
+   "missing": "Filters for {fields} appear once those fields are filled in drills.json.",
+   "missing_age": "age group",
+   "missing_difficulty": "difficulty",
+   "missing_players": "player counts",
+   "max_duration_chip": "≤ {n} min"
+  },
+  "session": {
+   "title": "Session",
+   "name_placeholder": "Session name",
+   "target": "Target {n} min",
+   "no_target": "No target set",
+   "over": "{n} min over target",
+   "under": "{n} min under target",
+   "on_target": "On target",
+   "empty": "No drills yet. Open a drill and tap Add to session to build tonight's plan.",
+   "start": "Start session",
+   "save": "Save session",
+   "saved": "Saved",
+   "clear": "Clear session",
+   "clear_confirm": "Tap again to clear",
+   "reduce_duration": "Reduce duration",
+   "increase_duration": "Increase duration",
+   "move_up": "Move up",
+   "move_down": "Move down",
+   "untitled": "Untitled session",
+   "copy_suffix": "{name} (copy)",
+   "target_short": "target {n} min"
+  },
+  "saved": {
+   "title": "Saved sessions",
+   "empty": "Nothing saved yet. Build a plan on the Session screen and tap Save session.",
+   "back": "← All saved sessions",
+   "total": "Total",
+   "created": "Created {date}",
+   "start": "Start session",
+   "edit": "Edit in planner",
+   "duplicate": "Duplicate",
+   "delete": "Delete session",
+   "delete_confirm": "Tap again to delete"
+  },
+  "run": {
+   "drill_label": "Drill {num}",
+   "position": "{i} of {n}",
+   "reset": "Reset",
+   "start_timer": "Start timer",
+   "pause_timer": "Pause timer",
+   "previous": "Previous",
+   "next_drill": "Next drill",
+   "end": "End session",
+   "resume": "Resume",
+   "intro": "{n} drills. Swipe or press next to work through them."
+  },
+  "settings": {
+   "title": "Settings",
+   "intro": "Set once. Every new session starts from these.",
+   "club": "Club",
+   "club_placeholder": "Club name",
+   "age_group": "Age group",
+   "squad_size": "Squad size",
+   "fewer_players": "Fewer players",
+   "more_players": "More players",
+   "target_length": "Target session length",
+   "save_close": "Save & close",
+   "close": "Close",
+   "coach_ages": "Age groups you coach",
+   "show_welcome": "Show welcome again",
+   "none_selected": "None selected",
+   "language": "Language",
+   "language_untranslated": "Shows English"
+  },
+  "onboarding": {
+   "step": "Step {i} of {n}",
+   "title": "Your drill book",
+   "point_1": "Discover football drills across eight categories",
+   "point_2": "Build sessions to a target length",
+   "point_3": "Save favourites for the drills that work",
+   "point_4": "Run training pitch-side, offline, screen awake",
+   "privacy": "No account needed. Everything stays on this device.",
+   "continue": "Continue",
+   "ages_title": "Which age groups do you coach?",
+   "ages_help": "Pick as many as apply. You can change this later in Settings.",
+   "finish": "Start coaching",
+   "skip": "Skip for now"
+  },
+  "count": {
+   "minutes": {
+    "one": "{n} min",
+    "other": "{n} min"
+   },
+   "drills": {
+    "one": "{n} drill",
+    "other": "{n} drills"
+   },
+   "players": {
+    "one": "{n} player",
+    "other": "{n} players"
+   },
+   "categories": {
+    "one": "{n} category",
+    "other": "{n} categories"
+   },
+   "sessions": {
+    "one": "{n} session",
+    "other": "{n} sessions"
+   },
+   "matches": {
+    "one": "{n} matching drill",
+    "other": "{n} matching drills"
+   },
+   "filters": {
+    "one": "{n} filter",
+    "other": "{n} filters"
+   },
+   "filters_active": {
+    "one": "{n} filter active",
+    "other": "{n} filters active"
+   }
+  },
+  "common": {
+   "any_age": "Any age",
+   "minutes_short": "min",
+   "separator": " · "
+  },
+  "$search": {
+   "numbers": [
+    "zero",
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+    "ten",
+    "eleven",
+    "twelve"
+   ],
+   "against": [
+    "against",
+    "v",
+    "vs"
+   ],
+   "warmup": [
+    "warm-up",
+    "warm up",
+    "warmup"
+   ],
+   "kit": {
+    "cones": "cones",
+    "balls": "balls",
+    "bibs": "bibs",
+    "small goals": "small goals",
+    "goals": "goals",
+    "keeper": "keeper"
+   }
+  }
+ },
+ "es": {
+  "$meta": {
+   "locale": "es",
+   "name": "Español",
+   "englishName": "Spanish"
+  }
+ },
+ "fr": {
+  "$meta": {
+   "locale": "fr",
+   "name": "Français",
+   "englishName": "French"
+  }
+ },
+ "de": {
+  "$meta": {
+   "locale": "de",
+   "name": "Deutsch",
+   "englishName": "German"
+  }
+ },
+ "it": {
+  "$meta": {
+   "locale": "it",
+   "name": "Italiano",
+   "englishName": "Italian"
+  }
+ },
+ "pt": {
+  "$meta": {
+   "locale": "pt",
+   "name": "Português",
+   "englishName": "Portuguese"
+  }
+ },
+ "nl": {
+  "$meta": {
+   "locale": "nl",
+   "name": "Nederlands",
+   "englishName": "Dutch"
+  }
+ },
+ "pl": {
+  "$meta": {
+   "locale": "pl",
+   "name": "Polski",
+   "englishName": "Polish"
+  }
+ }
+};
