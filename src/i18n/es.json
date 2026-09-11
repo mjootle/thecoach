@@ -5,7 +5,7 @@
     "englishName": "Spanish"
   },
   "app": {
-    "title": "Libro de ejercicios",
+    "title": "The Coach",
     "kicker": "Entrenamiento sub-12"
   },
   "tabs": {
@@ -130,7 +130,20 @@
     "show_welcome": "Ver la bienvenida otra vez",
     "none_selected": "Ninguna seleccionada",
     "language": "Idioma",
-    "language_untranslated": "En inglés"
+    "language_untranslated": "En inglés",
+    "data": "Tus datos",
+    "reset_favs": "Restablecer favoritos",
+    "reset_favs_confirm": "¿Quitar todos los ejercicios de tus favoritos? No se puede deshacer.",
+    "delete_saved": "Eliminar sesiones guardadas",
+    "delete_saved_confirm": "¿Eliminar todas las sesiones guardadas? No se puede deshacer.",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "about": "Acerca de",
+    "about_app": "Acerca de The Coach",
+    "about_body": "The Coach es un libro de ejercicios para entrenadores de fútbol base. Explora ejercicios por categoría, crea una sesión con una duración objetivo y dirígela en el campo con un cronómetro. Todo se guarda en este dispositivo, funciona sin conexión y no necesita cuenta.",
+    "privacy": "Política de privacidad",
+    "privacy_body": "The Coach no recoge nada. No hay cuentas, ni analíticas, ni seguimiento. Tus ajustes, favoritos y sesiones guardadas se almacenan solo en este navegador y en este dispositivo, y se eliminan si borras sus datos o usas los botones de arriba.",
+    "version": "Versión"
   },
   "onboarding": {
     "step": "Paso {i} de {n}",
@@ -225,5 +238,14 @@
     "remove_label": "Quitar partido final",
     "set": "{n} min fijados",
     "reserved": "{n} min reservados al final de la sesión"
+  },
+  "share": {
+    "action": "Compartir sesión",
+    "done": "Copiado",
+    "title": "Sesión de entrenamiento",
+    "received": "Sesión compartida cargada",
+    "replace_ask": "Un entrenador ha compartido una sesión con {n} ejercicios. Ya tienes una sesión en curso. ¿Reemplazarla o mantener la tuya?",
+    "replace": "Reemplazar",
+    "keep_mine": "Mantener la mía"
   }
 }

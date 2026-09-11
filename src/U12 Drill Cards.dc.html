@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Drill Book">
+<meta name="apple-mobile-web-app-title" content="The Coach">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 <meta name="theme-color" content="#ffffff">
@@ -95,6 +95,64 @@
                 <span style="font-family:var(--font-body);font-size:12px;font-weight:400;flex:none;text-align:right">{{ l.note }}</span>
               </button>
             </sc-for>
+          </div>
+        </div>
+
+        <div style="height:2px;background:#fff;margin-top:6px"></div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:#fff;opacity:0.8">{{ t.settings.data }}</span>
+          <sc-if value="{{ confirmFavs }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:8px;border:1px solid #fff;padding:12px">
+              <span style="font-family:var(--font-body);font-size:13px;line-height:1.5;color:#fff;text-wrap:pretty">{{ t.settings.reset_favs_confirm }}</span>
+              <div style="display:flex;gap:8px">
+                <button type="button" onClick="{{ cancelData }}" style="appearance:none;flex:1;border:1px solid #fff;background:transparent;min-height:46px;font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:#fff;cursor:pointer" style-hover="background:var(--color-accent-600)" style-active="background:#fff;color:var(--color-accent)">{{ t.settings.cancel }}</button>
+                <button type="button" onClick="{{ doResetFavs }}" style="appearance:none;flex:1;border:0;background:#fff;min-height:46px;font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-accent);cursor:pointer" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">{{ t.settings.delete }}</button>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ askFavsRow }}" hint-placeholder-val="{{ true }}">
+            <button type="button" onClick="{{ askResetFavs }}" style="appearance:none;border:1px solid #fff;background:transparent;width:100%;box-sizing:border-box;padding:0 16px;min-height:48px;display:flex;align-items:center;gap:10px;text-align:left;color:#fff;cursor:pointer" style-hover="background:var(--color-accent-600)" style-active="background:#fff;color:var(--color-accent)">
+              <span style="flex:1;min-width:0;font-family:var(--font-body);font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:inherit">{{ t.settings.reset_favs }}</span>
+              <span style="font-family:var(--font-heading);font-size:13px;font-weight:800;color:inherit;opacity:0.8;flex:none">{{ favDataCount }}</span>
+            </button>
+          </sc-if>
+          <sc-if value="{{ confirmSaved }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:8px;border:1px solid #fff;padding:12px">
+              <span style="font-family:var(--font-body);font-size:13px;line-height:1.5;color:#fff;text-wrap:pretty">{{ t.settings.delete_saved_confirm }}</span>
+              <div style="display:flex;gap:8px">
+                <button type="button" onClick="{{ cancelData }}" style="appearance:none;flex:1;border:1px solid #fff;background:transparent;min-height:46px;font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:#fff;cursor:pointer" style-hover="background:var(--color-accent-600)" style-active="background:#fff;color:var(--color-accent)">{{ t.settings.cancel }}</button>
+                <button type="button" onClick="{{ doDeleteSaved }}" style="appearance:none;flex:1;border:0;background:#fff;min-height:46px;font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-accent);cursor:pointer" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">{{ t.settings.delete }}</button>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ askSavedRow }}" hint-placeholder-val="{{ true }}">
+            <button type="button" onClick="{{ askDeleteSaved }}" style="appearance:none;border:1px solid #fff;background:transparent;width:100%;box-sizing:border-box;padding:0 16px;min-height:48px;display:flex;align-items:center;gap:10px;text-align:left;color:#fff;cursor:pointer" style-hover="background:var(--color-accent-600)" style-active="background:#fff;color:var(--color-accent)">
+              <span style="flex:1;min-width:0;font-family:var(--font-body);font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:inherit">{{ t.settings.delete_saved }}</span>
+              <span style="font-family:var(--font-heading);font-size:13px;font-weight:800;color:inherit;opacity:0.8;flex:none">{{ savedCount }}</span>
+            </button>
+          </sc-if>
+        </div>
+
+        <div style="height:2px;background:#fff;margin-top:6px"></div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:#fff;opacity:0.8">{{ t.settings.about }}</span>
+          <button type="button" onClick="{{ toggleAbout }}" style="appearance:none;border:1px solid #fff;background:transparent;width:100%;box-sizing:border-box;padding:0 16px;min-height:48px;display:flex;align-items:center;gap:10px;text-align:left;color:#fff;cursor:pointer" style-hover="background:var(--color-accent-600)" style-active="background:#fff;color:var(--color-accent)">
+            <span style="flex:1;min-width:0;font-family:var(--font-body);font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:inherit">{{ t.settings.about_app }}</span>
+            <span style="font-family:var(--font-heading);font-size:15px;font-weight:800;color:inherit;flex:none">{{ aboutMark }}</span>
+          </button>
+          <sc-if value="{{ aboutOpen }}" hint-placeholder-val="{{ false }}">
+            <p style="font-family:var(--font-body);font-size:13px;line-height:1.65;margin:0;padding:0 2px;color:#fff;opacity:0.9;text-wrap:pretty">{{ t.settings.about_body }}</p>
+          </sc-if>
+          <button type="button" onClick="{{ togglePrivacy }}" style="appearance:none;border:1px solid #fff;background:transparent;width:100%;box-sizing:border-box;padding:0 16px;min-height:48px;display:flex;align-items:center;gap:10px;text-align:left;color:#fff;cursor:pointer" style-hover="background:var(--color-accent-600)" style-active="background:#fff;color:var(--color-accent)">
+            <span style="flex:1;min-width:0;font-family:var(--font-body);font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:inherit">{{ t.settings.privacy }}</span>
+            <span style="font-family:var(--font-heading);font-size:15px;font-weight:800;color:inherit;flex:none">{{ privacyMark }}</span>
+          </button>
+          <sc-if value="{{ privacyOpen }}" hint-placeholder-val="{{ false }}">
+            <p style="font-family:var(--font-body);font-size:13px;line-height:1.65;margin:0;padding:0 2px;color:#fff;opacity:0.9;text-wrap:pretty">{{ t.settings.privacy_body }}</p>
+          </sc-if>
+          <div style="display:flex;align-items:baseline;gap:10px;padding-top:4px">
+            <span style="flex:1;font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:#fff;opacity:0.7">{{ t.settings.version }}</span>
+            <span style="font-family:var(--font-heading);font-size:13px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums">{{ appVersion }}</span>
           </div>
         </div>
       </div>
@@ -442,6 +500,18 @@
 
     <sc-if value="{{ isPlanScreen }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;gap:18px">
+        <sc-if value="{{ shareAsk }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:10px;border:2px solid var(--color-accent);padding:12px">
+            <span style="font-family:var(--font-body);font-size:13px;line-height:1.55;color:var(--color-text);text-wrap:pretty">{{ shareAskText }}</span>
+            <div style="display:flex;gap:8px">
+              <button type="button" onClick="{{ shareAskKeep }}" style="appearance:none;flex:1;border:1px solid var(--color-neutral-300);background:#fff;min-height:46px;font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-text);cursor:pointer" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">{{ t.share.keep_mine }}</button>
+              <button type="button" onClick="{{ shareAskApply }}" style="appearance:none;flex:1;border:0;background:var(--color-accent);min-height:46px;font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:#fff;cursor:pointer" style-hover="background:var(--color-accent-600)" style-active="background:var(--color-accent-700)">{{ t.share.replace }}</button>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ sharedBanner }}" hint-placeholder-val="{{ false }}">
+          <div style="border:2px solid var(--color-accent);padding:10px 12px;font-family:var(--font-body);font-size:12px;letter-spacing:0.05em;text-transform:uppercase;color:var(--color-accent-700)">{{ t.share.received }}</div>
+        </sc-if>
         <h1 style="font-family:var(--font-heading);font-size:34px;font-weight:800;line-height:1.05;letter-spacing:-0.02em;margin:0;color:var(--color-text)">{{ t.session.title }}</h1>
         <div style="height:2px;background:var(--color-divider)"></div>
 
@@ -525,6 +595,7 @@
         <div style="display:flex;flex-direction:column;gap:1px;background:var(--color-neutral-300);border:1px solid var(--color-neutral-300)">
           <button type="button" onClick="{{ onStart }}" style="appearance:none;border:0;background:var(--color-accent);padding:20px 16px;text-align:left;font-family:var(--font-body);font-size:14px;letter-spacing:0.06em;text-transform:uppercase;color:#fff;cursor:pointer;min-height:64px" style-hover="background:var(--color-accent-600)" style-active="background:var(--color-accent-700)">{{ t.session.start }}</button>
           <button type="button" onClick="{{ onSave }}" style="appearance:none;border:0;background:#fff;padding:18px 16px;text-align:left;font-family:var(--font-body);font-size:13px;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-text);cursor:pointer;min-height:56px" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">{{ saveLabel }}</button>
+          <button type="button" onClick="{{ onShare }}" style="appearance:none;border:0;background:#fff;padding:18px 16px;text-align:left;font-family:var(--font-body);font-size:13px;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-text);cursor:pointer;min-height:56px" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">{{ shareLabel }}</button>
           <button type="button" onClick="{{ onClear }}" style="appearance:none;border:0;background:#fff;padding:18px 16px;text-align:left;font-family:var(--font-body);font-size:13px;letter-spacing:0.06em;text-transform:uppercase;color:{{ clearInk }};cursor:pointer;min-height:56px" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">{{ clearLabel }}</button>
         </div>
 
@@ -768,6 +839,8 @@ class Component extends DCLogic {
   static TARGETS = [45, 60, 75, 90];
   static AGES = ['U8', 'U10', 'U12', 'U14', 'U16'];
 
+  static VERSION = '1.2.0';
+
   static readObj(key, fallback) {
     try {
       const raw = JSON.parse(localStorage.getItem(key) || 'null');
@@ -893,6 +966,8 @@ class Component extends DCLogic {
     endGame: Component.readObj(Component.EG_KEY, null),
     saved: (function () { const v = Component.readObj(Component.SAVED_KEY, []); return Array.isArray(v) ? v : []; })(),
     savedFlash: false, confirmClear: false, confirmDelete: null, openSaved: null,
+    dataConfirm: null, aboutOpen: false, privacyOpen: false,
+    shareFlash: false, sharedIn: false, pendingShare: null,
     filters: Object.assign({}, Component.EMPTY_FILTERS), q: '',
     run: null
   };
@@ -1016,6 +1091,111 @@ class Component extends DCLogic {
     });
     clearTimeout(this._saveTimer);
     this._saveTimer = setTimeout(() => this.setState({ savedFlash: false }), 1800);
+  }
+
+  // Share payload: v1|name|target|players|age|id:mins,…|endGameMins, base64url in the
+  // URL fragment so nothing ever leaves the device except the link the coach sends.
+  static b64e(str) {
+    return btoa(unescape(encodeURIComponent(str))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+
+  static b64d(code) {
+    let s = String(code).replace(/-/g, '+').replace(/_/g, '/');
+    while (s.length % 4) s += '=';
+    return decodeURIComponent(escape(atob(s)));
+  }
+
+  shareCode() {
+    const s = this.state, m = s.meta || {};
+    const pairs = (s.session || []).map((id) => id + ':' + this.minutesFor(id, s.durs)).join(',');
+    const parts = ['v1', m.name || '', m.target || '', m.players || '', m.age || '', pairs, s.endGame ? s.endGame.mins : ''];
+    return Component.b64e(parts.join('|'));
+  }
+
+  shareLink() {
+    const base = location.origin + location.pathname;
+    return base + '#s=' + this.shareCode();
+  }
+
+  shareText() {
+    const s = this.state, m = s.meta || {};
+    const byId = {};
+    (s.cats || []).forEach((c) => (c.drills || []).forEach((d) => { byId[d.id] = d; }));
+    const lines = (s.session || []).map((id, n) => {
+      const d = byId[id];
+      return (n + 1) + '. ' + (d ? Component.content(d, 'title') : id) + ' — ' + this.minutesFor(id, s.durs) + ' min';
+    });
+    if (s.endGame) lines.push((lines.length + 1) + '. ' + Component.T('endgame.title') + ' — ' + s.endGame.mins + ' min');
+    const head = (m.name || Component.T('session.title')) + (m.target ? ' (' + m.target + ' min)' : '');
+    return [head, ''].concat(lines).concat(['', this.shareLink()]).join('\n');
+  }
+
+  shareSession() {
+    const text = this.shareText();
+    const done = () => {
+      this.setState({ shareFlash: true });
+      clearTimeout(this._shareTimer);
+      this._shareTimer = setTimeout(() => this.setState({ shareFlash: false }), 2200);
+    };
+    if (navigator.share) {
+      navigator.share({ title: Component.T('share.title'), text: text }).then(done).catch(() => {});
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(() => {});
+      return;
+    }
+    done();
+  }
+
+  importShared(code) {
+    const payload = this.decodeShared(code);
+    if (!payload) return false;
+    const busy = (this.state.session || []).length > 0 || !!this.state.endGame;
+    if (busy) {
+      this.setState({ pendingShare: payload });
+      return true;
+    }
+    this.applyShared(payload);
+    return true;
+  }
+
+  decodeShared(code) {
+    let parts;
+    try { parts = Component.b64d(code).split('|'); } catch (e) { return null; }
+    if (!parts || parts[0] !== 'v1') return null;
+    const pairs = (parts[5] || '').split(',').filter(Boolean).map((p) => {
+      const bits = p.split(':');
+      return { id: bits[0], mins: parseInt(bits[1], 10) };
+    });
+    if (!pairs.length) return null;
+    const eg = parseInt(parts[6], 10);
+    return {
+      pairs,
+      name: parts[1] || '',
+      target: parseInt(parts[2], 10) || 60,
+      players: parseInt(parts[3], 10) || null,
+      age: parts[4] || '',
+      endGame: isNaN(eg) ? null : eg
+    };
+  }
+
+  applyShared(p) {
+    const durs = {};
+    p.pairs.forEach((q) => { if (!isNaN(q.mins)) durs[q.id] = q.mins; });
+    this.setState((s) => ({
+      session: this.persistSession(p.pairs.map((q) => q.id)),
+      durs: this.put(Component.DUR_KEY, durs),
+      endGame: this.put(Component.EG_KEY, p.endGame == null ? null : { mins: p.endGame }),
+      meta: this.put(Component.META_KEY, {
+        name: p.name, club: (s.meta && s.meta.club) || '',
+        age: p.age, players: p.players || (s.meta && s.meta.players) || 12, target: p.target
+      }),
+      pendingShare: null,
+      sharedIn: true
+    }));
+    clearTimeout(this._sharedTimer);
+    this._sharedTimer = setTimeout(() => this.setState({ sharedIn: false }), 4000);
   }
 
   loadSaved(entry) {
@@ -1243,6 +1423,13 @@ class Component extends DCLogic {
   }
 
   componentDidMount() {
+    try {
+      const m = /[#&]s=([A-Za-z0-9\-_]+)/.exec(location.hash || '');
+      if (m && this.importShared(m[1])) {
+        history.replaceState(null, '', location.pathname + location.search);
+        this.goTo(2);
+      }
+    } catch (e) {}
     if (!this.load()) {
       let tries = 0;
       this._poll = setInterval(() => {
@@ -1279,6 +1466,8 @@ class Component extends DCLogic {
 
   componentWillUnmount() {
     if (this._poll) clearInterval(this._poll);
+    clearTimeout(this._shareTimer);
+    clearTimeout(this._sharedTimer);
     if (this._i18nPoll) clearInterval(this._i18nPoll);
     clearTimeout(this._addTimer);
     clearTimeout(this._saveTimer);
@@ -1422,6 +1611,13 @@ class Component extends DCLogic {
       })),
       saveLabel: Component.T(this.state.savedFlash ? 'session.saved' : 'session.save'),
       onSave: () => this.saveSession(),
+      shareLabel: Component.T(this.state.shareFlash ? 'share.done' : 'share.action'),
+      onShare: () => this.shareSession(),
+      sharedBanner: !!this.state.sharedIn,
+      shareAsk: !!this.state.pendingShare,
+      shareAskText: this.state.pendingShare ? Component.T('share.replace_ask', { n: this.state.pendingShare.pairs.length }) : '',
+      shareAskApply: () => { if (this.state.pendingShare) this.applyShared(this.state.pendingShare); },
+      shareAskKeep: () => this.setState({ pendingShare: null }),
       onStart: () => this.startRun(seq),
       clearLabel: Component.T(this.state.confirmClear ? 'session.clear_confirm' : 'session.clear'),
       clearInk: this.state.confirmClear ? 'var(--color-accent)' : 'var(--color-neutral-800)',
@@ -1519,6 +1715,24 @@ class Component extends DCLogic {
         };
       }),
       settingsOpen: !!this.state.settingsOpen,
+      favDataCount: Component.T('count.drills', { n: (this.state.favs || []).length }),
+      savedCount: Component.T('count.sessions', { n: (this.state.saved || []).length }),
+      confirmFavs: this.state.dataConfirm === 'favs',
+      confirmSaved: this.state.dataConfirm === 'saved',
+      askFavsRow: this.state.dataConfirm !== 'favs',
+      askSavedRow: this.state.dataConfirm !== 'saved',
+      askResetFavs: () => this.setState({ dataConfirm: 'favs' }),
+      askDeleteSaved: () => this.setState({ dataConfirm: 'saved' }),
+      cancelData: () => this.setState({ dataConfirm: null }),
+      doResetFavs: () => this.setState({ favs: this.put(Component.FAV_KEY, []), dataConfirm: null }),
+      doDeleteSaved: () => this.setState({ saved: this.put(Component.SAVED_KEY, []), dataConfirm: null, openSaved: null, confirmDelete: null }),
+      aboutOpen: !!this.state.aboutOpen,
+      privacyOpen: !!this.state.privacyOpen,
+      aboutMark: this.state.aboutOpen ? '−' : '+',
+      privacyMark: this.state.privacyOpen ? '−' : '+',
+      toggleAbout: () => this.setState((s) => ({ aboutOpen: !s.aboutOpen })),
+      togglePrivacy: () => this.setState((s) => ({ privacyOpen: !s.privacyOpen })),
+      appVersion: Component.VERSION,
       surfaceShift: this.state.settingsOpen ? 'translateX(calc(-100% + 64px))' : 'translateX(0)',
       settingsDoneLabel: Component.T(JSON.stringify(meta) !== this.state.metaSnapshot ? 'settings.save_close' : 'settings.close'),
       goSettings: () => this.setState((s) => ({ settingsOpen: !s.settingsOpen, metaSnapshot: JSON.stringify(s.meta) })),
@@ -1571,7 +1785,7 @@ class Component extends DCLogic {
       isFavScreen,
       hasFavs: isFavScreen && saved.length > 0,
       noFavs: isFavScreen && saved.length === 0,
-      favCount: saved.length === 1 ? '1 drill' : saved.length + ' drills',
+      favCount: Component.T('count.drills', { n: saved.length }),
       favDrills: isFavScreen ? saved.map((dd) => this.favRow(dd, screens, favs)) : [],
       goFavs: () => this.goTo(screens.findIndex((s) => s.type === 'favs')),
       drillIsFav: dFav,

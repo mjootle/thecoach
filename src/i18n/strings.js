@@ -9,7 +9,7 @@ window.U12_I18N = {
    "base": true
   },
   "app": {
-   "title": "Drill book",
+   "title": "The Coach",
    "kicker": "Under-12 training"
   },
   "tabs": {
@@ -134,7 +134,20 @@ window.U12_I18N = {
    "show_welcome": "Show welcome again",
    "none_selected": "None selected",
    "language": "Language",
-   "language_untranslated": "Shows English"
+   "language_untranslated": "Shows English",
+   "data": "Your data",
+   "reset_favs": "Reset favourites",
+   "reset_favs_confirm": "Remove every drill from your favourites? This cannot be undone.",
+   "delete_saved": "Delete saved sessions",
+   "delete_saved_confirm": "Delete every saved session? This cannot be undone.",
+   "cancel": "Cancel",
+   "delete": "Delete",
+   "about": "About",
+   "about_app": "About The Coach",
+   "about_body": "The Coach is a drill book for youth football coaches. Browse drills by category, build a session to a target length, and run it pitchside with a timer. Everything is stored on this device, works offline, and needs no account.",
+   "privacy": "Privacy policy",
+   "privacy_body": "The Coach collects nothing. There are no accounts, no analytics and no tracking. Your settings, favourites and saved sessions are stored only in this browser on this device, and are deleted if you clear its data or use the buttons above.",
+   "version": "Version"
   },
   "onboarding": {
    "step": "Step {i} of {n}",
@@ -230,6 +243,15 @@ window.U12_I18N = {
    "remove_label": "Remove end game",
    "set": "{n} min set",
    "reserved": "{n} min reserved at the end of the session"
+  },
+  "share": {
+   "action": "Share session",
+   "done": "Copied",
+   "title": "Training session",
+   "received": "Shared session loaded",
+   "replace_ask": "A coach shared a session with {n} drills. You already have a session in progress. Replace it, or keep yours?",
+   "replace": "Replace",
+   "keep_mine": "Keep mine"
   }
  },
  "de": {
@@ -246,7 +268,7 @@ window.U12_I18N = {
    "englishName": "Spanish"
   },
   "app": {
-   "title": "Libro de ejercicios",
+   "title": "The Coach",
    "kicker": "Entrenamiento sub-12"
   },
   "tabs": {
@@ -371,7 +393,20 @@ window.U12_I18N = {
    "show_welcome": "Ver la bienvenida otra vez",
    "none_selected": "Ninguna seleccionada",
    "language": "Idioma",
-   "language_untranslated": "En inglés"
+   "language_untranslated": "En inglés",
+   "data": "Tus datos",
+   "reset_favs": "Restablecer favoritos",
+   "reset_favs_confirm": "¿Quitar todos los ejercicios de tus favoritos? No se puede deshacer.",
+   "delete_saved": "Eliminar sesiones guardadas",
+   "delete_saved_confirm": "¿Eliminar todas las sesiones guardadas? No se puede deshacer.",
+   "cancel": "Cancelar",
+   "delete": "Eliminar",
+   "about": "Acerca de",
+   "about_app": "Acerca de The Coach",
+   "about_body": "The Coach es un libro de ejercicios para entrenadores de fútbol base. Explora ejercicios por categoría, crea una sesión con una duración objetivo y dirígela en el campo con un cronómetro. Todo se guarda en este dispositivo, funciona sin conexión y no necesita cuenta.",
+   "privacy": "Política de privacidad",
+   "privacy_body": "The Coach no recoge nada. No hay cuentas, ni analíticas, ni seguimiento. Tus ajustes, favoritos y sesiones guardadas se almacenan solo en este navegador y en este dispositivo, y se eliminan si borras sus datos o usas los botones de arriba.",
+   "version": "Versión"
   },
   "onboarding": {
    "step": "Paso {i} de {n}",
@@ -466,6 +501,15 @@ window.U12_I18N = {
    "remove_label": "Quitar partido final",
    "set": "{n} min fijados",
    "reserved": "{n} min reservados al final de la sesión"
+  },
+  "share": {
+   "action": "Compartir sesión",
+   "done": "Copiado",
+   "title": "Sesión de entrenamiento",
+   "received": "Sesión compartida cargada",
+   "replace_ask": "Un entrenador ha compartido una sesión con {n} ejercicios. Ya tienes una sesión en curso. ¿Reemplazarla o mantener la tuya?",
+   "replace": "Reemplazar",
+   "keep_mine": "Mantener la mía"
   }
  },
  "fr": {
