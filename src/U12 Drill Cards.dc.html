@@ -1247,6 +1247,17 @@ class Component extends DCLogic {
         if (this.load() || ++tries > 100) clearInterval(this._poll);
       }, 50);
     }
+    // strings.js / i18n.js may still be loading at first paint: wait for the
+    // runtime, then re-render so every label resolves without user interaction.
+    if (!window.I18N) {
+      let iTries = 0;
+      this._i18nPoll = setInterval(() => {
+        if (window.I18N) {
+          clearInterval(this._i18nPoll);
+          this.setState({ locale: window.I18N.locale });
+        } else if (++iTries > 200) clearInterval(this._i18nPoll);
+      }, 25);
+    }
     this._key = (e) => {
       if (e.key === 'ArrowRight') this.move(1);
       if (e.key === 'ArrowLeft') this.move(-1);
@@ -1266,6 +1277,7 @@ class Component extends DCLogic {
 
   componentWillUnmount() {
     if (this._poll) clearInterval(this._poll);
+    if (this._i18nPoll) clearInterval(this._i18nPoll);
     clearTimeout(this._addTimer);
     clearTimeout(this._saveTimer);
     clearTimeout(this._clearTimer);
