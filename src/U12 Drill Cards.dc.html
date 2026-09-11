@@ -1418,6 +1418,10 @@ class Component extends DCLogic {
     this.setState({ cats, screens, i: 0 }, () => {
       this.migrateSaved();
       this.restoreRun(this.state.session.length);
+      if (this._gotoSession) {
+        this._gotoSession = false;
+        this.goTo(screens.findIndex((s) => s.type === 'session'));
+      }
     });
     return true;
   }
@@ -1427,7 +1431,7 @@ class Component extends DCLogic {
       const m = /[#&]s=([A-Za-z0-9\-_]+)/.exec(location.hash || '');
       if (m && this.importShared(m[1])) {
         history.replaceState(null, '', location.pathname + location.search);
-        this.goTo(2);
+        this._gotoSession = true;
       }
     } catch (e) {}
     if (!this.load()) {
@@ -1491,6 +1495,7 @@ class Component extends DCLogic {
 
   goTo(i) {
     const s = this.state.screens || [];
+    if (i == null || i < 0 || i >= s.length) return;
     const from = s[this.state.i], to = s[i];
     let zoom = null;
     if (from && to) {
@@ -1776,7 +1781,7 @@ class Component extends DCLogic {
         down: () => this.moveInSession(dd.id, 1),
         remove: () => this.removeFromSession(dd.id),
         removeLabel: Component.T('drill.remove_from_session', { name: dd.title }),
-        go: () => this.goTo(screens.findIndex((s) => s.drill === dd))
+        go: () => this.goTo(screens.findIndex((s) => s.type === 'drill' && s.drill && s.drill.id === dd.id))
       })) : [],
       addLabel: Component.T(this.state.justAdded && inSession ? 'drill.added' : (inSession ? 'drill.in_session' : 'drill.add_to_session')),
       addBg: inSession ? 'var(--color-neutral-200)' : '#fff',
