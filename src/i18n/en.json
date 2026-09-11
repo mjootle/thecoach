@@ -144,6 +144,11 @@
     "about_body": "The Coach is a drill book for youth football coaches. Browse drills by category, build a session to a target length, and run it pitchside with a timer. Everything is stored on this device, works offline, and needs no account.",
     "privacy": "Privacy policy",
     "privacy_body": "The Coach collects nothing. There are no accounts, no analytics and no tracking. Your settings, favourites and saved sessions are stored only in this browser on this device, and are deleted if you clear its data or use the buttons above.",
+    "offline": "Offline ready",
+    "offline_yes": "Yes",
+    "offline_no": "Not yet",
+    "offline_checking": "Checking…",
+    "offline_na": "N/A",
     "version": "Version"
   },
   "onboarding": {

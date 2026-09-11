@@ -143,6 +143,11 @@
     "about_body": "The Coach es un libro de ejercicios para entrenadores de fútbol base. Explora ejercicios por categoría, crea una sesión con una duración objetivo y dirígela en el campo con un cronómetro. Todo se guarda en este dispositivo, funciona sin conexión y no necesita cuenta.",
     "privacy": "Política de privacidad",
     "privacy_body": "The Coach no recoge nada. No hay cuentas, ni analíticas, ni seguimiento. Tus ajustes, favoritos y sesiones guardadas se almacenan solo en este navegador y en este dispositivo, y se eliminan si borras sus datos o usas los botones de arriba.",
+    "offline": "Listo sin conexión",
+    "offline_yes": "Sí",
+    "offline_no": "Todavía no",
+    "offline_checking": "Comprobando…",
+    "offline_na": "N/D",
     "version": "Versión"
   },
   "onboarding": {

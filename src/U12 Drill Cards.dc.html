@@ -176,6 +176,10 @@
             <p style="font-family:var(--font-body);font-size:13px;line-height:1.65;margin:0;padding:0 2px;color:#fff;opacity:0.9;text-wrap:pretty">{{ t.settings.privacy_body }}</p>
           </sc-if>
           <div style="display:flex;align-items:baseline;gap:10px;padding-top:4px">
+            <span style="flex:1;font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:#fff;opacity:0.7">{{ offlineLabel }}</span>
+            <span style="font-family:var(--font-heading);font-size:13px;font-weight:800;color:#fff">{{ offlineValue }}</span>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:10px">
             <span style="flex:1;font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:#fff;opacity:0.7">{{ t.settings.version }}</span>
             <span style="font-family:var(--font-heading);font-size:13px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums">{{ appVersion }}</span>
           </div>
@@ -1451,7 +1455,31 @@ class Component extends DCLogic {
     return true;
   }
 
+  // Reports whether the app document is actually sitting in the offline cache,
+  // so the coach can confirm at a glance before leaving for a pitch.
+  async checkOfflineReady() {
+    try {
+      if (!/^https?:$/.test(location.protocol)) return this.setState({ offlineReady: 'na' });
+      if (!('serviceWorker' in navigator) || !('caches' in window)) return this.setState({ offlineReady: 'no' });
+      const reg = await navigator.serviceWorker.getRegistration();
+      const keys = await caches.keys();
+      let doc = false;
+      for (const k of keys) {
+        const c = await caches.open(k);
+        if (await c.match('./index.html') || await c.match(location.href)) { doc = true; break; }
+      }
+      this.setState({ offlineReady: reg && reg.active && doc ? 'yes' : 'no' });
+    } catch (e) { this.setState({ offlineReady: 'no' }); }
+  }
+
   componentDidMount() {
+    this.checkOfflineReady();
+    // Translations can land after first paint in the bundled build.
+    this._onI18nReady = () => this.forceUpdate();
+    document.addEventListener('i18n:ready', this._onI18nReady);
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.ready.then(() => setTimeout(() => this.checkOfflineReady(), 1200)).catch(() => {});
+    }
     // Keep the shell inside the VISUAL viewport so the software keyboard shrinks the
     // app instead of pushing the fixed tab bar out of sight.
     const vv = window.visualViewport;
@@ -1507,6 +1535,7 @@ class Component extends DCLogic {
   }
 
   componentWillUnmount() {
+    if (this._onI18nReady) document.removeEventListener('i18n:ready', this._onI18nReady);
     if (this._poll) clearInterval(this._poll);
     clearTimeout(this._shareTimer);
     clearTimeout(this._sharedTimer);
@@ -1783,6 +1812,8 @@ class Component extends DCLogic {
       toggleAbout: () => this.setState((s) => ({ aboutOpen: !s.aboutOpen })),
       togglePrivacy: () => this.setState((s) => ({ privacyOpen: !s.privacyOpen })),
       appVersion: Component.VERSION,
+      offlineLabel: Component.T('settings.offline'),
+      offlineValue: Component.T('settings.offline_' + (this.state.offlineReady || 'checking')),
       surfaceShift: this.state.settingsOpen ? 'translateX(calc(-100% + 64px))' : 'translateX(0)',
       settingsDoneLabel: Component.T(JSON.stringify(meta) !== this.state.metaSnapshot ? 'settings.save_close' : 'settings.close'),
       goSettings: () => this.setState((s) => ({ settingsOpen: !s.settingsOpen, metaSnapshot: JSON.stringify(s.meta) })),

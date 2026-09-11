@@ -147,6 +147,11 @@ window.U12_I18N = {
    "about_body": "The Coach is a drill book for youth football coaches. Browse drills by category, build a session to a target length, and run it pitchside with a timer. Everything is stored on this device, works offline, and needs no account.",
    "privacy": "Privacy policy",
    "privacy_body": "The Coach collects nothing. There are no accounts, no analytics and no tracking. Your settings, favourites and saved sessions are stored only in this browser on this device, and are deleted if you clear its data or use the buttons above.",
+   "offline": "Offline ready",
+   "offline_yes": "Yes",
+   "offline_no": "Not yet",
+   "offline_checking": "Checking…",
+   "offline_na": "N/A",
    "version": "Version"
   },
   "onboarding": {
@@ -252,13 +257,6 @@ window.U12_I18N = {
    "replace_ask": "A coach shared a session with {n} drills. You already have a session in progress. Replace it, or keep yours?",
    "replace": "Replace",
    "keep_mine": "Keep mine"
-  }
- },
- "de": {
-  "$meta": {
-   "locale": "de",
-   "name": "Deutsch",
-   "englishName": "German"
   }
  },
  "es": {
@@ -406,6 +404,11 @@ window.U12_I18N = {
    "about_body": "The Coach es un libro de ejercicios para entrenadores de fútbol base. Explora ejercicios por categoría, crea una sesión con una duración objetivo y dirígela en el campo con un cronómetro. Todo se guarda en este dispositivo, funciona sin conexión y no necesita cuenta.",
    "privacy": "Política de privacidad",
    "privacy_body": "The Coach no recoge nada. No hay cuentas, ni analíticas, ni seguimiento. Tus ajustes, favoritos y sesiones guardadas se almacenan solo en este navegador y en este dispositivo, y se eliminan si borras sus datos o usas los botones de arriba.",
+   "offline": "Listo sin conexión",
+   "offline_yes": "Sí",
+   "offline_no": "Todavía no",
+   "offline_checking": "Comprobando…",
+   "offline_na": "N/D",
    "version": "Versión"
   },
   "onboarding": {
@@ -519,11 +522,25 @@ window.U12_I18N = {
    "englishName": "French"
   }
  },
+ "de": {
+  "$meta": {
+   "locale": "de",
+   "name": "Deutsch",
+   "englishName": "German"
+  }
+ },
  "it": {
   "$meta": {
    "locale": "it",
    "name": "Italiano",
    "englishName": "Italian"
+  }
+ },
+ "pt": {
+  "$meta": {
+   "locale": "pt",
+   "name": "Português",
+   "englishName": "Portuguese"
   }
  },
  "nl": {
@@ -538,13 +555,6 @@ window.U12_I18N = {
    "locale": "pl",
    "name": "Polski",
    "englishName": "Polish"
-  }
- },
- "pt": {
-  "$meta": {
-   "locale": "pt",
-   "name": "Português",
-   "englishName": "Portuguese"
   }
  }
 };
