@@ -113,7 +113,13 @@
     "next_drill": "Next drill",
     "end": "End session",
     "resume": "Resume",
-    "intro": "{n} drills. Swipe or press next to work through them."
+    "intro": {
+
+      "one": "{n} drill. Swipe or press next to work through it.",
+
+      "other": "{n} drills. Swipe or press next to work through them."
+
+    }
   },
   "settings": {
     "title": "Settings",
@@ -127,6 +133,21 @@
     "target_length": "Target session length",
     "save_close": "Save & close",
     "close": "Close",
+    "your_name": "Your name",
+    "first_name": "First name",
+    "last_name": "Last name",
+    "coaches": "Coaches at the club",
+    "fewer_coaches": "Fewer coaches",
+    "more_coaches": "More coaches",
+    "schedule": "Training schedule",
+    "schedule_hint": "Tap the days training is on. The app works out the next session from these.",
+    "schedule_empty": "No training days selected yet.",
+    "prev_month": "Previous month",
+    "next_month": "Next month",
+    "remove_date": "Remove this date",
+    "training_time": "Regular training time",
+    "starts": "Starts",
+    "ends": "Ends",
     "coach_ages": "Age groups you coach",
     "show_welcome": "Show welcome again",
     "none_selected": "None selected",

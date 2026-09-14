@@ -56,6 +56,9 @@
   button:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
   @keyframes drillZoomIn { from { opacity: 0; transform: scale(0.86); } to { opacity: 1; transform: none; } }
   @keyframes drillZoomOut { from { opacity: 0; transform: scale(1.14); } to { opacity: 1; transform: none; } }
+  @keyframes overlayFade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes msgInRight { from { opacity: 0; transform: translateX(30%); } to { opacity: 1; transform: none; } }
+  @keyframes msgInLeft { from { opacity: 0; transform: translateX(-30%); } to { opacity: 1; transform: none; } }
   @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
   input::placeholder { color: var(--color-neutral-600); }
   [data-panel="settings"] input::placeholder { color: var(--color-neutral-600); }
@@ -73,7 +76,7 @@
 
 <div style="position:fixed;top:0;left:0;right:0;height:var(--app-h, 100%);display:flex;justify-content:center;background:var(--color-neutral-200);overflow:hidden;overscroll-behavior:none">
 <div style="width:100%;max-width:480px;height:100%;background:#fff;padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);box-sizing:border-box;position:relative;display:flex;flex-direction:column;overflow:hidden;border-left:1px solid var(--color-neutral-300);border-right:1px solid var(--color-neutral-300)">
-  <div data-panel="settings" style="position:absolute;inset:0;background:var(--color-accent);overflow-y:auto;overscroll-behavior:contain;padding:24px 18px calc(28px + env(safe-area-inset-bottom)) 82px;-webkit-overflow-scrolling:touch;z-index:0">
+  <div data-panel="settings" style="position:absolute;top:env(safe-area-inset-top);left:0;right:0;bottom:0;background:var(--color-accent);overflow-y:auto;overscroll-behavior:contain;padding:24px 18px calc(28px + env(safe-area-inset-bottom)) 82px;-webkit-overflow-scrolling:touch;z-index:0">
 <div style="display:flex;flex-direction:column;gap:18px">
         <div style="display:flex;align-items:center;gap:12px"><h1 style="flex:1;font-family:var(--font-heading);font-size:34px;font-weight:800;line-height:1.05;letter-spacing:-0.02em;margin:0;color:#fff">{{ t.settings.title }}</h1><button type="button" onClick="{{ closeSettings }}" style="appearance:none;border:0;background:#fff;padding:0 16px;height:44px;font-family:var(--font-heading);font-size:13px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-accent);cursor:pointer;flex:none" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">{{ settingsDoneLabel }}</button></div>
         <div style="height:2px;background:#fff"></div>
@@ -103,6 +106,77 @@
               <button type="button" onClick="{{ t.pick }}" style="appearance:none;flex:1;border:0;border-left:{{ t.edge }};background:{{ t.bg }};color:{{ t.ink }};padding:12px 4px;min-height:48px;font-family:var(--font-heading);font-size:14px;font-weight:800;cursor:pointer" style-hover="background:var(--color-accent-600)" style-active="background:#fff;color:var(--color-accent)">{{ t.label }}</button>
             </sc-for>
           </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:#fff;opacity:0.8">{{ t.settings.your_name }}</span>
+          <div style="display:flex;gap:8px;align-items:stretch">
+            <input type="text" value="{{ coachFirst }}" onChange="{{ onCoachFirst }}" placeholder="{{ t.settings.first_name }}" autocomplete="given-name" style="appearance:none;flex:1;min-width:0;box-sizing:border-box;border:1px solid #fff;background:#fff;padding:12px;min-height:48px;font-family:var(--font-body);font-size:16px;color:var(--color-text)">
+            <input type="text" value="{{ coachLast }}" onChange="{{ onCoachLast }}" placeholder="{{ t.settings.last_name }}" autocomplete="family-name" style="appearance:none;flex:1;min-width:0;box-sizing:border-box;border:1px solid #fff;background:#fff;padding:12px;min-height:48px;font-family:var(--font-body);font-size:16px;color:var(--color-text)">
+            <span style="flex:none;width:52px;background:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:17px;font-weight:800;color:var(--color-accent)">{{ coachInitials }}</span>
+          </div>
+          <span style="font-family:var(--font-body);font-size:11.5px;line-height:1.55;color:#fff;opacity:0.8;text-wrap:pretty">{{ coachHint }}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="flex:1;font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:#fff;opacity:0.8">{{ t.settings.coaches }}</span>
+          <button type="button" onClick="{{ coachesDown }}" aria-label="{{ t.settings.fewer_coaches }}" style="appearance:none;border:1px solid #fff;background:transparent;width:48px;height:48px;font-family:var(--font-heading);font-size:20px;font-weight:800;color:#fff;cursor:pointer" style-hover="background:var(--color-accent-600)" style-active="background:#fff;color:var(--color-accent)">−</button>
+          <span style="min-width:36px;text-align:center;font-family:var(--font-heading);font-size:20px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums">{{ coachCount }}</span>
+          <button type="button" onClick="{{ coachesUp }}" aria-label="{{ t.settings.more_coaches }}" style="appearance:none;border:1px solid #fff;background:transparent;width:48px;height:48px;font-family:var(--font-heading);font-size:20px;font-weight:800;color:#fff;cursor:pointer" style-hover="background:var(--color-accent-600)" style-active="background:#fff;color:var(--color-accent)">+</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:#fff;opacity:0.8">{{ t.settings.schedule }}</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <button type="button" onClick="{{ calPrev }}" aria-label="{{ t.settings.prev_month }}" style="appearance:none;border:1px solid #fff;background:transparent;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;flex:none" style-hover="background:var(--color-accent-600)" style-active="background:#fff;color:var(--color-accent)">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"></path></svg>
+            </button>
+            <span style="flex:1;text-align:center;font-family:var(--font-heading);font-size:15px;font-weight:800;color:#fff">{{ calTitle }}</span>
+            <button type="button" onClick="{{ calNext }}" aria-label="{{ t.settings.next_month }}" style="appearance:none;border:1px solid #fff;background:transparent;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;flex:none" style-hover="background:var(--color-accent-600)" style-active="background:#fff;color:var(--color-accent)">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"></path></svg>
+            </button>
+          </div>
+          <div style="background:#fff;padding:8px">
+            <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px">
+              <sc-for list="{{ calDayNames }}" as="w" hint-placeholder-count="7">
+                <span style="text-align:center;padding:3px 0 5px;font-family:var(--font-body);font-size:9.5px;font-weight:600;letter-spacing:0.06em;color:var(--color-neutral-700)">{{ w.label }}</span>
+              </sc-for>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px">
+              <sc-for list="{{ calCells }}" as="c" hint-placeholder-count="42">
+                <button type="button" onClick="{{ c.toggle }}" style="appearance:none;border:1px solid {{ c.edge }};background:{{ c.bg }};color:{{ c.ink }};min-height:40px;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:13px;font-weight:{{ c.weight }};cursor:pointer;padding:0" style-hover="border-color:var(--color-text)">{{ c.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <span style="font-family:var(--font-body);font-size:11.5px;line-height:1.55;color:#fff;opacity:0.8;text-wrap:pretty">{{ t.settings.schedule_hint }}</span>
+
+          <sc-if value="{{ hasSchedule }}" hint-placeholder-val="{{ false }}">
+            <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:1px;background:var(--color-neutral-300)">
+              <sc-for list="{{ scheduleRows }}" as="s" hint-placeholder-count="3">
+                <li style="background:#fff;display:flex;align-items:center;gap:10px;padding:10px 12px">
+                  <span style="flex:none;font-family:var(--font-heading);font-size:14px;font-weight:800;color:var(--color-text);min-width:64px">{{ s.day }}</span>
+                  <span style="flex:1;min-width:0;font-family:var(--font-body);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-neutral-700)">{{ s.weekday }}</span>
+                  <button type="button" onClick="{{ s.remove }}" aria-label="{{ t.settings.remove_date }}" style="appearance:none;border:1px solid var(--color-neutral-300);background:#fff;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:var(--color-text);cursor:pointer;flex:none" style-hover="background:var(--color-text);color:#fff">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+                  </button>
+                </li>
+              </sc-for>
+            </ol>
+          </sc-if>
+          <sc-if value="{{ scheduleEmpty }}" hint-placeholder-val="{{ true }}">
+            <span style="font-family:var(--font-body);font-size:11.5px;line-height:1.55;color:#fff;opacity:0.8;text-wrap:pretty">{{ t.settings.schedule_empty }}</span>
+          </sc-if>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:#fff;opacity:0.8">{{ t.settings.training_time }}</span>
+          <div style="display:flex;gap:8px">
+            <label style="flex:1;display:flex;flex-direction:column;gap:5px">
+              <span style="font-family:var(--font-body);font-size:9.5px;letter-spacing:0.08em;text-transform:uppercase;color:#fff;opacity:0.7">{{ t.settings.starts }}</span>
+              <input type="time" value="{{ trainStart }}" onChange="{{ onTrainStart }}" step="300" style="appearance:none;width:100%;box-sizing:border-box;border:1px solid #fff;background:#fff;padding:0 12px;min-height:48px;font-family:var(--font-heading);font-size:17px;font-weight:800;color:var(--color-text)">
+            </label>
+            <label style="flex:1;display:flex;flex-direction:column;gap:5px">
+              <span style="font-family:var(--font-body);font-size:9.5px;letter-spacing:0.08em;text-transform:uppercase;color:#fff;opacity:0.7">{{ t.settings.ends }}</span>
+              <input type="time" value="{{ trainEnd }}" onChange="{{ onTrainEnd }}" step="300" style="appearance:none;width:100%;box-sizing:border-box;border:1px solid #fff;background:#fff;padding:0 12px;min-height:48px;font-family:var(--font-heading);font-size:17px;font-weight:800;color:var(--color-text)">
+            </label>
+          </div>
+          <span style="font-family:var(--font-body);font-size:11.5px;line-height:1.55;color:#fff;opacity:0.8;text-wrap:pretty">{{ trainingHint }}</span>
         </div>
         <div style="height:2px;background:#fff;margin-top:6px"></div>
         <div style="display:flex;flex-direction:column;gap:6px">
@@ -187,7 +261,222 @@
       </div>
   </div>
 
-  <div style="position:relative;z-index:1;flex:1;min-height:0;display:flex;flex-direction:column;background:#fff;transform:{{ surfaceShift }};transition:transform 340ms cubic-bezier(.22,.61,.36,1);box-shadow:18px 0 44px rgba(0,0,0,0.30)">
+  <sc-if value="{{ inboxOpen }}" hint-placeholder-val="{{ false }}">
+    <div data-panel="inbox" style="position:absolute;top:env(safe-area-inset-top);left:0;right:0;bottom:0;background:#fff;overflow-y:auto;overscroll-behavior:contain;padding:24px 58px calc(28px + env(safe-area-inset-bottom)) 18px;-webkit-overflow-scrolling:touch;z-index:0">
+
+      <sc-if value="{{ planList }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:18px;animation:{{ listAnim }}">
+          <div style="display:flex;align-items:flex-start;gap:12px">
+            <div style="flex:1;min-width:0">
+              <span style="font-family:var(--font-body);font-size:10.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-accent-700)">{{ clubName }}</span>
+              <h1 style="font-family:var(--font-heading);font-size:34px;font-weight:800;line-height:1.02;letter-spacing:-0.02em;margin:6px 0 0;color:var(--color-text)">The plan</h1>
+            </div>
+            <button type="button" onClick="{{ closeClub }}" aria-label="Close club inbox" style="appearance:none;border:1px solid var(--color-neutral-300);background:#fff;width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--color-text);cursor:pointer;flex:none;transition:background 120ms" style-hover="background:var(--color-accent);border-color:var(--color-accent);color:#fff" style-active="background:var(--color-accent-700);border-color:var(--color-accent-700);color:#fff">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"></path></svg>
+            </button>
+          </div>
+          <div style="height:2px;background:var(--color-divider)"></div>
+
+          <sc-if value="{{ hasNotices }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:1px;background:var(--color-neutral-300);border:1px solid var(--color-neutral-300)">
+              <sc-for list="{{ notices }}" as="n" hint-placeholder-count="1">
+                <div style="padding:12px 14px;display:flex;align-items:flex-start;gap:10px;background:{{ n.bg }}">
+                  <span style="width:8px;height:8px;flex:none;margin-top:5px;background:{{ n.dot }}"></span>
+                  <span style="flex:1;font-family:var(--font-body);font-size:12.5px;line-height:1.5;color:var(--color-text);text-wrap:pretty">{{ n.text }}</span>
+                </div>
+              </sc-for>
+              <button type="button" onClick="{{ clearNotices }}" style="appearance:none;border:0;background:#fff;min-height:42px;padding:0 14px;display:flex;align-items:center;font-family:var(--font-body);font-size:10.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-neutral-700);cursor:pointer;text-align:left" style-hover="background:var(--color-neutral-200)">{{ noticesClearLabel }}</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ canSubmit }}" hint-placeholder-val="{{ true }}">
+            <button type="button" onClick="{{ startSubmit }}" style="appearance:none;border:0;background:var(--color-accent);width:100%;box-sizing:border-box;min-height:58px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-family:var(--font-body);font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#fff;cursor:pointer;text-align:left" style-hover="background:var(--color-accent-600)" style-active="background:var(--color-accent-700)">
+              <span>{{ submitLabel }}</span>
+              <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l16-8-6 16-2-6z"></path></svg>
+            </button>
+          </sc-if>
+          <sc-if value="{{ nothingToSubmit }}" hint-placeholder-val="{{ false }}">
+            <p style="font-family:var(--font-body);font-size:13px;line-height:1.6;margin:0;color:var(--color-neutral-700);text-wrap:pretty">Build a session first, then you can put it up as the plan.</p>
+          </sc-if>
+
+          <sc-if value="{{ noPlans }}" hint-placeholder-val="{{ false }}">
+            <p style="font-family:var(--font-body);font-size:13px;line-height:1.6;margin:0;color:var(--color-neutral-700);text-wrap:pretty">No sessions planned yet. Whoever puts one up first sets the plan; anyone can replace it.</p>
+          </sc-if>
+
+          <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px">
+            <sc-for list="{{ planCards }}" as="p" hint-placeholder-count="2">
+              <li>
+                <button type="button" onClick="{{ p.open }}" style="appearance:none;border:2px solid {{ p.edge }};background:#fff;width:100%;box-sizing:border-box;display:flex;flex-direction:column;gap:0;text-align:left;padding:0;cursor:pointer" style-hover="background:var(--color-neutral-100)">
+                  <span style="display:flex;align-items:center;gap:10px;width:100%;box-sizing:border-box;padding:11px 13px;background:{{ p.bandBg }}">
+                    <span style="font-family:var(--font-body);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:{{ p.bandInk }}">{{ p.status }}</span>
+                    <span style="flex:1"></span>
+                    <span style="font-family:var(--font-body);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:{{ p.bandInk }}">{{ p.date }}</span>
+                  </span>
+                  <span style="display:flex;align-items:center;gap:12px;width:100%;box-sizing:border-box;padding:14px 13px">
+                    <span style="width:44px;height:44px;flex:none;background:{{ p.avatarBg }};display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:15px;font-weight:800;color:{{ p.avatarInk }}">{{ p.initials }}</span>
+                    <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px">
+                      <span style="font-family:var(--font-heading);font-size:18px;font-weight:800;line-height:1.15;letter-spacing:-0.01em;color:var(--color-text)">{{ p.title }}</span>
+                      <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-neutral-700)">{{ p.meta }}</span>
+                    </span>
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--color-accent)" stroke-width="2" style="flex:none"><path d="M9 6l6 6-6 6"></path></svg>
+                  </span>
+                  <span style="display:flex;align-items:center;gap:8px;width:100%;box-sizing:border-box;padding:0 13px 13px">
+                    <span style="font-family:var(--font-body);font-size:11px;letter-spacing:0.05em;color:var(--color-neutral-700)">{{ p.byline }}</span>
+                    <span style="flex:1"></span>
+                    <span style="font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-accent-700)">{{ p.versionsLabel }}</span>
+                  </span>
+                </button>
+              </li>
+            </sc-for>
+          </ol>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ planConfirm }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:18px;animation:msgInRight 300ms cubic-bezier(.22,.61,.36,1)">
+          <button type="button" onClick="{{ cancelSubmit }}" style="appearance:none;border:0;background:none;padding:0;text-align:left;font-family:var(--font-body);font-size:10.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-accent-700);cursor:pointer" style-hover="color:var(--color-accent)">← The plan</button>
+          <h1 style="font-family:var(--font-heading);font-size:30px;font-weight:800;line-height:1.05;letter-spacing:-0.02em;margin:0;color:var(--color-text);text-wrap:pretty">{{ confirmHeading }}</h1>
+          <div style="height:2px;background:var(--color-divider)"></div>
+
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-family:var(--font-body);font-size:10.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-neutral-700)">Training evening</span>
+            <span style="font-family:var(--font-heading);font-size:20px;font-weight:800;color:var(--color-text)">{{ confirmDate }}</span>
+          </div>
+
+          <sc-if value="{{ confirmReplaces }}" hint-placeholder-val="{{ true }}">
+            <div style="border:2px solid var(--color-divider);padding:14px 16px;display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:var(--font-body);font-size:12.5px;line-height:1.55;color:var(--color-text);text-wrap:pretty">{{ confirmReplaceNote }}</span>
+              <div style="display:flex;align-items:center;gap:12px">
+                <span style="width:40px;height:40px;flex:none;background:var(--color-neutral-200);display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:14px;font-weight:800;color:var(--color-text)">{{ confirmTheirInitials }}</span>
+                <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+                  <span style="font-family:var(--font-heading);font-size:15px;font-weight:800;color:var(--color-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ confirmTheirTitle }}</span>
+                  <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-neutral-700)">{{ confirmTheirMeta }}</span>
+                </span>
+              </div>
+              <button type="button" onClick="{{ viewTheirs }}" style="appearance:none;border:1px solid var(--color-neutral-300);background:#fff;min-height:44px;padding:0 14px;display:flex;align-items:center;font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-text);cursor:pointer;text-align:left" style-hover="background:var(--color-neutral-200)">View their session first</button>
+            </div>
+          </sc-if>
+
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <label for="pl-name" style="font-family:var(--font-body);font-size:10.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-neutral-700)">Session name</label>
+            <input id="pl-name" ref="{{ planNameRef }}" type="text" value="{{ confirmDefaultName }}" placeholder="{{ confirmNamePlaceholder }}" style="appearance:none;border:1px solid var(--color-neutral-300);border-radius:0;background:#fff;padding:0 14px;height:52px;font-family:var(--font-body);font-size:16px;color:var(--color-text);box-sizing:border-box;width:100%">
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <label for="pl-note" style="font-family:var(--font-body);font-size:10.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-neutral-700)">Note to the others (optional)</label>
+            <textarea id="pl-note" ref="{{ planNoteRef }}" rows="3" placeholder="Pitch is waterlogged at the far end, keeping everything in one half." style="appearance:none;border:1px solid var(--color-neutral-300);border-radius:0;background:#fff;padding:12px 14px;font-family:var(--font-body);font-size:16px;line-height:1.5;color:var(--color-text);box-sizing:border-box;width:100%;resize:vertical"></textarea>
+          </div>
+
+          <sc-if value="{{ needsName }}" hint-placeholder-val="{{ false }}">
+            <div style="border:1px solid var(--color-neutral-300);background:var(--color-neutral-100);padding:12px 14px">
+              <span style="font-family:var(--font-body);font-size:12.5px;line-height:1.55;color:var(--color-neutral-800);text-wrap:pretty">{{ needsNameNote }}</span>
+            </div>
+          </sc-if>
+
+          <button type="button" onClick="{{ confirmSubmit }}" style="appearance:none;border:0;background:var(--color-accent);width:100%;box-sizing:border-box;min-height:58px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-family:var(--font-body);font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#fff;cursor:pointer" style-hover="background:var(--color-accent-600)" style-active="background:var(--color-accent-700)">
+            <span>{{ confirmCta }}</span>
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </button>
+          <span style="font-family:var(--font-body);font-size:11.5px;line-height:1.55;color:var(--color-neutral-700);text-wrap:pretty">{{ confirmFoot }}</span>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ planDetail }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:16px;animation:msgInRight 300ms cubic-bezier(.22,.61,.36,1)">
+          <button type="button" onClick="{{ clubBack }}" style="appearance:none;border:0;background:none;padding:0;text-align:left;font-family:var(--font-body);font-size:10.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-accent-700);cursor:pointer" style-hover="color:var(--color-accent)">← The plan</button>
+
+          <div style="display:flex;align-items:center;gap:10px;padding:11px 13px;background:{{ detBandBg }}">
+            <span style="font-family:var(--font-body);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:{{ detBandInk }}">{{ detStatus }}</span>
+            <span style="flex:1"></span>
+            <span style="font-family:var(--font-body);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:{{ detBandInk }}">{{ detDate }}</span>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:12px">
+            <span style="width:48px;height:48px;flex:none;background:var(--color-accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:16px;font-weight:800;color:#fff">{{ detInitials }}</span>
+            <div style="flex:1;min-width:0">
+              <h1 style="font-family:var(--font-heading);font-size:26px;font-weight:800;line-height:1.08;letter-spacing:-0.02em;margin:0;color:var(--color-text);text-wrap:pretty">{{ detTitle }}</h1>
+              <span style="display:block;font-family:var(--font-body);font-size:11px;letter-spacing:0.05em;color:var(--color-neutral-700);padding-top:4px">{{ detByline }}</span>
+            </div>
+          </div>
+
+          <sc-if value="{{ detNote }}" hint-placeholder-val="{{ true }}">
+            <p style="font-family:var(--font-body);font-size:14px;line-height:1.6;margin:0;padding:0 0 0 14px;border-left:2px solid var(--color-divider);color:var(--color-neutral-800);text-wrap:pretty">{{ detNote }}</p>
+          </sc-if>
+
+          <div style="height:2px;background:var(--color-divider)"></div>
+
+          <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:0;border-top:1px solid var(--color-neutral-300)">
+            <sc-for list="{{ detDrills }}" as="d" hint-placeholder-count="5">
+              <li style="border-bottom:1px solid var(--color-neutral-200);display:flex;align-items:baseline;gap:12px;padding:13px 2px">
+                <span style="font-family:var(--font-heading);font-size:15px;font-weight:800;color:var(--color-accent);flex:none;width:22px;font-variant-numeric:tabular-nums">{{ d.order }}</span>
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+                  <span style="font-family:var(--font-heading);font-size:15px;font-weight:800;line-height:1.2;color:var(--color-text)">{{ d.name }}</span>
+                  <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-neutral-700)">{{ d.cat }}</span>
+                </div>
+                <span style="font-family:var(--font-heading);font-size:14px;font-weight:800;color:var(--color-text);flex:none;font-variant-numeric:tabular-nums">{{ d.mins }}</span>
+              </li>
+            </sc-for>
+          </ol>
+
+          <div style="border-top:2px solid var(--color-divider);padding-top:12px;display:flex;align-items:baseline;justify-content:space-between">
+            <span style="font-family:var(--font-body);font-size:10.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-accent-700)">Total</span>
+            <span style="font-family:var(--font-heading);font-size:26px;font-weight:800;color:var(--color-text);font-variant-numeric:tabular-nums">{{ detTotal }}</span>
+          </div>
+
+          <button type="button" onClick="{{ toggleHistory }}" style="appearance:none;border:1px solid var(--color-neutral-300);background:#fff;width:100%;box-sizing:border-box;min-height:48px;padding:0 14px;display:flex;align-items:center;gap:10px;font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-text);cursor:pointer;text-align:left;margin-top:4px" style-hover="background:var(--color-neutral-200)">
+            <span style="flex:1">{{ historyToggleLabel }}</span>
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="var(--color-accent)" stroke-width="2" style="flex:none;transform:{{ historyChevron }}"><path d="M6 9l6 6 6-6"></path></svg>
+          </button>
+
+          <sc-if value="{{ historyOpen }}" hint-placeholder-val="{{ false }}">
+            <ol style="margin:0;padding:0 0 0 4px;list-style:none;display:flex;flex-direction:column;gap:0">
+              <sc-for list="{{ history }}" as="h" hint-placeholder-count="3">
+                <li style="display:flex;gap:14px;align-items:stretch">
+                  <span style="width:24px;flex:none;display:flex;flex-direction:column;align-items:center">
+                    <span style="width:11px;height:11px;flex:none;background:{{ h.dotBg }};border:2px solid var(--color-accent);margin-top:15px"></span>
+                    <span style="flex:1;width:2px;background:{{ h.lineBg }}"></span>
+                  </span>
+                  <span style="flex:1;min-width:0;display:flex;align-items:center;gap:10px;padding:11px 0 13px">
+                    <span style="width:36px;height:36px;flex:none;background:{{ h.avBg }};display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:13px;font-weight:800;color:{{ h.avInk }}">{{ h.initials }}</span>
+                    <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+                      <span style="font-family:var(--font-heading);font-size:14px;font-weight:800;color:var(--color-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ h.title }}</span>
+                      <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-neutral-700)">{{ h.stamp }}</span>
+                    </span>
+                    <sc-if value="{{ h.current }}" hint-placeholder-val="{{ true }}">
+                      <span style="flex:none;background:var(--color-accent);color:#fff;font-family:var(--font-body);font-size:9.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:5px 8px">Current</span>
+                    </sc-if>
+                  </span>
+                </li>
+              </sc-for>
+            </ol>
+          </sc-if>
+
+          <sc-if value="{{ detMine }}" hint-placeholder-val="{{ false }}">
+            <button type="button" onClick="{{ editPlan }}" style="appearance:none;border:0;background:var(--color-accent);width:100%;box-sizing:border-box;min-height:58px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-family:var(--font-body);font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#fff;cursor:pointer;text-align:left;margin-top:4px" style-hover="background:var(--color-accent-600)" style-active="background:var(--color-accent-700)">
+              <span>Open in my session</span>
+              <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+            </button>
+            <span style="font-family:var(--font-body);font-size:11.5px;line-height:1.55;color:var(--color-neutral-700);text-wrap:pretty">Your own edits update this session rather than creating a new version. The others are still told it changed.</span>
+          </sc-if>
+
+          <sc-if value="{{ detCanCopy }}" hint-placeholder-val="{{ false }}">
+            <button type="button" onClick="{{ copyPlan }}" style="appearance:none;border:0;background:var(--color-accent);width:100%;box-sizing:border-box;min-height:58px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-family:var(--font-body);font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#fff;cursor:pointer;text-align:left;margin-top:4px" style-hover="background:var(--color-accent-600)" style-active="background:var(--color-accent-700)">
+              <span>{{ detUseLabel }}</span>
+              <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+            </button>
+            <span style="font-family:var(--font-body);font-size:11.5px;line-height:1.55;color:var(--color-neutral-700);text-wrap:pretty">Loads these drills into your session so you can run or change them.</span>
+          </sc-if>
+        </div>
+      </sc-if>
+
+    </div>
+  </sc-if>
+
+  <div style="position:relative;z-index:1;flex:1;min-height:0;display:flex;flex-direction:column;background:#fff;transform:{{ surfaceShift }};transition:transform 340ms cubic-bezier(.22,.61,.36,1);box-shadow:{{ surfaceShadow }}">
+
+    <sc-if value="{{ inboxOpen }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ closeClub }}" style="position:absolute;inset:0;z-index:9;background:rgba(32,30,29,0.44);cursor:pointer;animation:overlayFade 180ms ease 340ms both"></div>
+    </sc-if>
 
   <div style="height:3px;background:var(--color-neutral-200);flex:none">
     <div style="height:3px;background:var(--color-accent);width:{{ progress }}"></div>
@@ -215,6 +504,12 @@
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M6 12h12M10 19h4"></path></svg>
             <sc-if value="{{ filterBadgeShow }}" hint-placeholder-val="{{ false }}">
               <span style="font-family:var(--font-heading);font-size:12px;font-weight:800;color:var(--color-accent)">{{ filterBadge }}</span>
+            </sc-if>
+          </button>
+          <button type="button" onClick="{{ goClub }}" aria-label="Club suggestions" style="appearance:none;border:1px solid var(--color-neutral-300);background:#fff;height:44px;padding:0 12px;display:flex;align-items:center;gap:6px;color:var(--color-text);cursor:pointer;flex:none;position:relative" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18v14H3zM3 9l9 5 9-5"></path></svg>
+            <sc-if value="{{ clubBadgeShow }}" hint-placeholder-val="{{ false }}">
+              <span style="font-family:var(--font-heading);font-size:12px;font-weight:800;color:var(--color-accent)">{{ clubBadge }}</span>
             </sc-if>
           </button>
           <button type="button" onClick="{{ goSettings }}" aria-label="{{ t.home.settings }}" style="appearance:none;border:1px solid var(--color-neutral-300);background:#fff;width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--color-text);cursor:pointer;flex:none;transition:background 120ms" style-hover="background:var(--color-accent);border-color:var(--color-accent);color:#fff" style-active="background:var(--color-accent-700);border-color:var(--color-accent-700);color:#fff">
@@ -263,20 +558,31 @@
 
         <sc-if value="{{ browsing }}" hint-placeholder-val="{{ true }}">
         <div style="display:flex;flex-direction:column;gap:10px">
-          <button type="button" onClick="{{ goSession }}" style="appearance:none;border:0;background:var(--color-accent);padding:12px 16px;display:flex;align-items:center;gap:12px;text-align:left;cursor:pointer;min-height:52px" style-hover="background:var(--color-accent-600)" style-active="background:var(--color-accent-700)">
-            <span style="flex:1;font-family:var(--font-heading);font-size:16px;font-weight:800;letter-spacing:-0.01em;color:#fff">{{ t.home.build_session }}</span>
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2.2" style="flex:none"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
-          </button>
-
-          <sc-if value="{{ hasCurrent }}" hint-placeholder-val="{{ false }}">
-            <button type="button" onClick="{{ goSession }}" style="appearance:none;border:2px solid var(--color-accent);background:#fff;padding:8px 12px;display:flex;align-items:center;gap:12px;text-align:left;cursor:pointer;min-height:46px" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-neutral-300)">
-              <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
-                <span style="font-family:var(--font-heading);font-size:15px;font-weight:800;letter-spacing:-0.01em;color:var(--color-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ currentTitle }}</span>
-                <span style="font-family:var(--font-body);font-size:10.5px;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-neutral-700)">{{ currentMeta }}</span>
+          <sc-if value="{{ tonightSettled }}" hint-placeholder-val="{{ false }}">
+            <button type="button" onClick="{{ openTonight }}" style="appearance:none;border:0;background:var(--color-accent);padding:13px 16px;display:flex;align-items:center;gap:12px;text-align:left;cursor:pointer;min-height:66px" style-hover="background:var(--color-accent-600)" style-active="background:var(--color-accent-700)">
+              <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px">
+                <span style="font-family:var(--font-body);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#fff;opacity:0.85">{{ tonightKicker }}</span>
+                <span style="font-family:var(--font-heading);font-size:18px;font-weight:800;letter-spacing:-0.01em;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ tonightTitle }}</span>
+                <span style="font-family:var(--font-body);font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:#fff;opacity:0.85;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ tonightMeta }}</span>
               </span>
-              <span style="font-family:var(--font-heading);font-size:12px;font-weight:800;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-accent);flex:none">{{ continueLabel }}</span>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2.2" style="flex:none"><path d="M9 6l6 6-6 6"></path></svg>
             </button>
           </sc-if>
+
+          <button type="button" onClick="{{ goSession }}" style="appearance:none;border:{{ buildCtaBorder }};background:{{ buildCtaBg }};padding:12px 16px;display:flex;align-items:center;gap:12px;text-align:left;cursor:pointer;min-height:52px" style-hover="background:{{ buildCtaHover }}" style-active="background:{{ buildCtaHover }}">
+            <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+              <span style="font-family:var(--font-heading);font-size:16px;font-weight:800;letter-spacing:-0.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:{{ buildCtaInk }}">{{ buildCtaLabel }}</span>
+              <sc-if value="{{ buildCtaSub }}" hint-placeholder-val="{{ false }}">
+                <span style="font-family:var(--font-body);font-size:10.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:{{ buildCtaSubInk }}">{{ buildCtaSub }}</span>
+              </sc-if>
+            </span>
+            <sc-if value="{{ buildCtaAction }}" hint-placeholder-val="{{ false }}">
+              <span style="font-family:var(--font-heading);font-size:12px;font-weight:800;letter-spacing:0.07em;text-transform:uppercase;flex:none;color:{{ buildCtaInk }}">{{ buildCtaAction }}</span>
+            </sc-if>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="{{ buildCtaInk }}" stroke-width="2.2" style="flex:none"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </button>
+
+
         </div>
 
         <div style="display:flex;align-items:baseline;justify-content:space-between;border-top:2px solid var(--color-divider);padding-top:9px">
@@ -292,8 +598,16 @@
               <span style="margin-top:auto;font-family:var(--font-body);font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-neutral-700)">{{ c.count }}</span>
             </button>
           </sc-for>
+          <sc-for list="{{ homeWideCards }}" as="c" hint-placeholder-count="0">
+            <button type="button" onClick="{{ c.go }}" style="grid-column:1 / -1;appearance:none;border:0;background:#fff;display:flex;align-items:center;gap:12px;padding:10px 11px;text-align:left;cursor:pointer;min-height:52px" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-accent);color:#fff">
+              <span style="font-family:var(--font-heading);font-size:20px;font-weight:800;line-height:1;color:var(--color-accent);flex:none">{{ c.short }}</span>
+              <span style="flex:1;min-width:0;font-family:var(--font-heading);font-size:13px;font-weight:800;line-height:1.15;letter-spacing:-0.01em;color:var(--color-text)">{{ c.label }}</span>
+              <span style="font-family:var(--font-body);font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-neutral-700);flex:none">{{ c.count }}</span>
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--color-accent)" stroke-width="2.2" style="flex:none"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+            </button>
+          </sc-for>
           <button type="button" onClick="{{ goEndGame }}" style="grid-column:1 / -1;appearance:none;border:0;background:#fff;display:flex;align-items:center;gap:12px;padding:10px 11px;text-align:left;cursor:pointer;min-height:52px" style-hover="background:var(--color-neutral-200)" style-active="background:var(--color-accent);color:#fff">
-            <span style="font-family:var(--font-heading);font-size:20px;font-weight:800;line-height:1;color:var(--color-accent);flex:none">09</span>
+            <span style="font-family:var(--font-heading);font-size:20px;font-weight:800;line-height:1;color:var(--color-accent);flex:none">{{ endGameNum }}</span>
             <span style="flex:1;min-width:0;font-family:var(--font-heading);font-size:13px;font-weight:800;line-height:1.15;letter-spacing:-0.01em;color:var(--color-text)">{{ t.endgame.title }}</span>
             <span style="font-family:var(--font-body);font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-neutral-700);flex:none">{{ endGameMeta }}</span>
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--color-accent)" stroke-width="2.2" style="flex:none"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
@@ -305,7 +619,7 @@
 
     <sc-if value="{{ isEndGame }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;gap:16px;animation:{{ zoomAnim }}">
-        <span style="font-family:var(--font-heading);font-size:64px;font-weight:800;line-height:0.9;letter-spacing:-0.03em;color:var(--color-accent)">09</span>
+        <span style="font-family:var(--font-heading);font-size:64px;font-weight:800;line-height:0.9;letter-spacing:-0.03em;color:var(--color-accent)">{{ endGameNum }}</span>
         <h1 style="font-family:var(--font-heading);font-size:34px;font-weight:800;line-height:1.05;letter-spacing:-0.02em;margin:0;color:var(--color-text)">{{ t.endgame.title }}</h1>
         <div style="height:2px;background:var(--color-divider)"></div>
         <p style="font-family:var(--font-body);font-size:14px;line-height:1.6;margin:0;color:var(--color-neutral-800);text-wrap:pretty">{{ t.endgame.intro }}</p>
@@ -547,11 +861,8 @@
         <div style="display:flex;flex-direction:column;gap:12px">
           <input type="text" value="{{ sessionName }}" onChange="{{ onName }}" placeholder="{{ t.session.name_placeholder }}" style="appearance:none;width:100%;box-sizing:border-box;border:1px solid var(--color-neutral-300);background:#fff;padding:13px 12px;min-height:48px;font-family:var(--font-body);font-size:16px;color:var(--color-text)">
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:-4px">
-            <button type="button" onClick="{{ useDate }}" style="appearance:none;border:0;background:var(--color-neutral-200);padding:0 10px;height:30px;display:flex;align-items:center;gap:6px;font-family:var(--font-body);font-size:10.5px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-accent-700);cursor:pointer;max-width:100%" style-hover="background:var(--color-neutral-300)" style-active="background:var(--color-accent);color:#fff">
-              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" style="flex:none"><path d="M12 5v14M5 12h14"></path></svg><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ todayLabel }}</span>
-            </button>
-            <button type="button" onClick="{{ useClubDate }}" style="appearance:none;border:0;background:var(--color-neutral-200);padding:0 10px;height:30px;display:flex;align-items:center;gap:6px;font-family:var(--font-body);font-size:10.5px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-accent-700);cursor:pointer;opacity:{{ clubDateDim }};max-width:100%" style-hover="background:var(--color-neutral-300)" style-active="background:var(--color-accent);color:#fff">
-              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" style="flex:none"><path d="M12 5v14M5 12h14"></path></svg><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ clubDateLabel }}</span>
+            <button type="button" onClick="{{ useNextSession }}" style="appearance:none;border:0;background:var(--color-neutral-200);padding:0 10px;height:30px;display:flex;align-items:center;gap:6px;font-family:var(--font-body);font-size:10.5px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-accent-700);cursor:pointer;max-width:100%" style-hover="background:var(--color-neutral-300)" style-active="background:var(--color-accent);color:#fff">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" style="flex:none"><path d="M12 5v14M5 12h14"></path></svg><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ nextSessionLabel }}</span>
             </button>
           </div>
           <div style="display:flex;align-items:center;gap:10px;border-top:1px solid var(--color-neutral-300);border-bottom:1px solid var(--color-neutral-300);padding:10px 0">
@@ -744,7 +1055,7 @@
   </div>
 
   <sc-if value="{{ showOnboarding }}" hint-placeholder-val="{{ false }}">
-    <div style="position:absolute;inset:0;z-index:5;background:#fff;display:flex;flex-direction:column">
+    <div style="position:absolute;top:env(safe-area-inset-top);left:0;right:0;bottom:0;z-index:5;background:#fff;display:flex;flex-direction:column">
       <div style="height:3px;background:var(--color-neutral-200);flex:none">
         <div style="height:3px;background:var(--color-accent);width:{{ obProgress }}"></div>
       </div>
@@ -825,7 +1136,8 @@ class Component extends DCLogic {
     "Defending one against one": "Defending",
     "Small-sided games": "Games",
     "Fitness and agility": "Fitness",
-    "Goalkeeping": "Goalkeeping"
+    "Goalkeeping": "Goalkeeping",
+    "Corners and set pieces": "Corners"
   };
 
   static T(key, vars) {
@@ -867,14 +1179,419 @@ class Component extends DCLogic {
   static COACH_AGES_KEY = 'u12-coach-ages';
   static TARGETS = [45, 60, 75, 90];
   static AGES = ['U8', 'U10', 'U12', 'U14', 'U16'];
-
   static VERSION = '1.2.0';
+  static KIT_VOCAB = [
+    ['cones', /cone/],
+    ['balls', /ball/],
+    ['bibs', /bib/],
+    ['small goals', /small goal|cone goal/],
+    ['goals', /goal/],
+    ['keeper', /keeper|glove/]
+  ];
+  static NUMWORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
+  static EMPTY_FILTERS = { ages: [], cats: [], diffs: [], kit: [], players: null, maxDur: null };
+  static DATES_KEY = 'u12-training-dates';
+  static TRAIN_KEY = 'u12-training-time';
+  static TRAIN_DEFAULT = { start: '18:00', end: '19:30' };
+  static COACH_KEY = 'u12-coach';
+  static COACH_DEFAULT = { first: '', last: '', count: 4 };
+  static PLAN_KEY = 'u12-club-plans';
+  static NOTICE_KEY = 'u12-club-notices';
 
-  static readObj(key, fallback) {
+  static CLUB_NAME = 'Fairfield Rovers';
+  static HOUR = 3600000;
+  static DAY = 86400000;
+
+
+  static plainName(name) {
+    const s = (name || '').trim();
+    if (!s) return '';
+    if (/\d{1,2}\s+\w{3,}\s+\d{4}/.test(s)) return '';
+    if (/^\d{1,4}[\/-]\d{1,2}[\/-]\d{1,4}$/.test(s)) return '';
+    return s;
+  }
+
+  // Same wording as today(), for an arbitrary evening.
+  // True when a name already tells the reader a date, in which case the CTA
+  // must not also append its own "for <evening>" clause.
+  static namesADate(name) {
+    const s = (name || '').trim();
+    if (!s) return false;
+    return /\d{1,2}(st|nd|rd|th)\b/i.test(s)
+      || /\d{1,2}\s*\w{3,}\s*\d{2,4}/.test(s)
+      || /\d{1,4}[\/-]\d{1,2}[\/-]\d{1,4}/.test(s)
+      || /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i.test(s)
+      || /\b(tonight|tomorrow|today|mon|tue|wed|thu|fri|sat|sun)/i.test(s);
+  }
+
+  static dateStamp(ts) {
     try {
-      const raw = JSON.parse(localStorage.getItem(key) || 'null');
-      return raw && typeof raw === 'object' ? raw : fallback;
-    } catch (e) { return fallback; }
+      return new Date(ts).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+    } catch (e) { return ''; }
+  }
+
+  static dayKey(ts) {
+    const d = new Date(ts);
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+
+  static initialsOf(first, last) {
+    const a = (first || '').trim().charAt(0);
+    const b = (last || '').trim().charAt(0);
+    const s = (a + b).toUpperCase();
+    return s || '??';
+  }
+
+  // "Tonight" / "Tomorrow" / "Saturday 21st" — the phrasing used in notices too.
+  static dateWords(ts) {
+    const d = new Date(ts);
+    const today = new Date();
+    const dk = Component.dayKey(ts);
+    if (dk === Component.dayKey(today.getTime())) return 'tonight';
+    const tm = new Date(today.getTime() + Component.DAY);
+    if (dk === Component.dayKey(tm.getTime())) return 'tomorrow';
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const n = d.getDate();
+    const suffix = (n % 10 === 1 && n !== 11) ? 'st' : (n % 10 === 2 && n !== 12) ? 'nd' : (n % 10 === 3 && n !== 13) ? 'rd' : 'th';
+    return days[d.getDay()] + ' ' + n + suffix;
+  }
+
+  static clock(ts) {
+    const d = new Date(ts);
+    return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  }
+
+  // Seeded so the screen reads as a working club before the backend exists.
+  static SEED_PLANS = (function () {
+    const now = Date.now();
+    const start = new Date(); start.setHours(18, 0, 0, 0);
+    if (start.getTime() <= now) start.setDate(start.getDate() + 1);
+    const at = start.getTime();
+    return [
+      { id: 'p1', date: Component.dayKey(at), sessionAt: at, title: 'Passing and Finishing',
+        note: '', drills: [['Dynamic Warm Up', 'Warm-up', 10], ['Passing Gates', 'Passing', 15], ['Shooting Circuit', 'Shooting', 15], ['4v4 Match', 'Games', 20]],
+        byFirst: 'Andy', byLast: 'Reid', initials: 'AR', createdAt: now - 4 * 3600000, editedAt: null, version: 1, status: 'superseded' },
+      { id: 'p2', date: Component.dayKey(at), sessionAt: at, title: 'Transition and pressing',
+        note: 'Pitch is waterlogged at the far end, keeping everything in one half.',
+        drills: [['Rondo Warm Up', 'Warm-up', 10], ['Press and Cover', 'Defending', 20], ['Counter Attack 3v2', 'Attacking', 15], ['Small-sided Match', 'Games', 15]],
+        byFirst: 'Priya', byLast: 'Shah', initials: 'PS', createdAt: now - 90 * 60000, editedAt: null, version: 2, status: 'active' }
+    ];
+  })();
+
+  state = {
+    cats: null, i: 0, favs: Component.readFavs(),
+    session: Component.readList(Component.SESSION_KEY),
+    justAdded: false,
+    onboarded: (function () { try { return localStorage.getItem(Component.ONBOARD_KEY) === '1'; } catch (e) { return true; } })(),
+    obStep: 0,
+    locale: (window.I18N ? window.I18N.locale : 'en'),
+    coachAges: Component.readList(Component.COACH_AGES_KEY),
+    meta: Component.readObj(Component.META_KEY, { name: '', age: '', players: 12, target: 60 }),
+    durs: Component.readObj(Component.DUR_KEY, {}),
+    endGame: Component.readObj(Component.EG_KEY, null),
+    saved: (function () { const v = Component.readObj(Component.SAVED_KEY, []); return Array.isArray(v) ? v : []; })(),
+    savedFlash: false, confirmClear: false, confirmDelete: null, openSaved: null,
+    // Club planning. Last write wins, tagged by author; no approvals.
+    plans: Component.readObj(Component.PLAN_KEY, null) || Component.SEED_PLANS,
+    notices: Component.readObj(Component.NOTICE_KEY, []) || [],
+    coach: Object.assign({}, Component.COACH_DEFAULT, Component.readObj(Component.COACH_KEY, {}) || {}),
+    training: Object.assign({}, Component.TRAIN_DEFAULT, Component.readObj(Component.TRAIN_KEY, {}) || {}),
+    trainingDates: Component.readObj(Component.DATES_KEY, null) || [],
+    calMonth: null,
+    openPlan: null, planStage: null, submitAt: null, historyOpen: false,
+    inboxOpen: false, fromMsg: false,
+    dataConfirm: null, aboutOpen: false, privacyOpen: false,
+    shareFlash: false, sharedIn: false, pendingShare: null,
+    filters: Object.assign({}, Component.EMPTY_FILTERS), q: '',
+    run: null
+  };
+
+  get coach() {
+    return Object.assign({}, Component.COACH_DEFAULT, this.state.coach || {});
+  }
+
+  myInitials() {
+    const c = this.coach;
+    return Component.initialsOf(c.first, c.last);
+  }
+
+  // Name is optional in Settings, so notices need a readable fallback.
+  myLabel() {
+    const c = this.coach;
+    return (c.first || c.last) ? this.myInitials() : 'A coach';
+  }
+
+  setCoach(key, value) {
+    this.setState((s) => {
+      const coach = Object.assign({}, Component.COACH_DEFAULT, s.coach, { [key]: value });
+      this.put(Component.COACH_KEY, coach);
+      return { coach };
+    });
+  }
+
+  // The next time training starts, from the configured window.
+  // "19th Sept" — the form the chip reads.
+  static dayMonth(ts) {
+    const d = new Date(ts);
+    return Component.ordinal(d.getDate()) + ' ' + Component.MONTHS[d.getMonth()].slice(0, 4).replace(/^Jun.$/, 'June').replace(/^Jul.$/, 'July');
+  }
+
+  static ordinal(n) {
+    const s = (n % 10 === 1 && n !== 11) ? 'st' : (n % 10 === 2 && n !== 12) ? 'nd' : (n % 10 === 3 && n !== 13) ? 'rd' : 'th';
+    return n + s;
+  }
+
+  static MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+  // Scheduled evening, as a timestamp at the configured start time.
+  startOn(dateKey) {
+    const p = String(dateKey).split('-').map(Number);
+    const t = String((this.state.training || Component.TRAIN_DEFAULT).start || '18:00').split(':');
+    const d = new Date(p[0], (p[1] || 1) - 1, p[2] || 1);
+    d.setHours(parseInt(t[0], 10) || 0, parseInt(t[1], 10) || 0, 0, 0);
+    return d.getTime();
+  }
+
+  // Scheduled dates still to come, soonest first. An evening counts as current
+  // until training finishes, so a session being run now stays "tonight".
+  upcomingDates() {
+    const tr = this.state.training || Component.TRAIN_DEFAULT;
+    const endParts = String(tr.end || '19:30').split(':');
+    const now = Date.now();
+    return (this.state.trainingDates || []).slice().sort().filter((k) => {
+      const p = k.split('-').map(Number);
+      const d = new Date(p[0], p[1] - 1, p[2]);
+      d.setHours(parseInt(endParts[0], 10) || 23, parseInt(endParts[1], 10) || 59, 0, 0);
+      return d.getTime() >= now;
+    });
+  }
+
+  shiftMonth(step) {
+    this.setState((s) => {
+      const base = s.calMonth ? new Date(s.calMonth) : new Date();
+      const d = new Date(base.getFullYear(), base.getMonth() + step, 1);
+      return { calMonth: d.getTime() };
+    });
+  }
+
+  toggleTrainingDate(key) {
+    this.setState((s) => {
+      const has = (s.trainingDates || []).indexOf(key) > -1;
+      const trainingDates = has
+        ? s.trainingDates.filter((k) => k !== key)
+        : (s.trainingDates || []).concat([key]).sort();
+      this.put(Component.DATES_KEY, trainingDates);
+      return { trainingDates };
+    });
+  }
+
+  atToday(hhmm, fallback) {
+    const parts = String(hhmm || fallback).split(':');
+    const d = new Date();
+    d.setHours(parseInt(parts[0], 10) || 0, parseInt(parts[1], 10) || 0, 0, 0);
+    return d.getTime();
+  }
+
+  nextSessionStart() {
+    const sched = this.upcomingDates();
+    if (sched.length) return this.startOn(sched[0]);
+    const tr = this.state.training || Component.TRAIN_DEFAULT;
+    const start = this.atToday(tr.start, Component.TRAIN_DEFAULT.start);
+    const end = this.atToday(tr.end, Component.TRAIN_DEFAULT.end);
+    // Tonight remains the session in play until training finishes.
+    if (Date.now() <= Math.max(start, end)) return start;
+    const d = new Date(start);
+    d.setDate(d.getDate() + 1);
+    return d.getTime();
+  }
+
+  setTraining(key, value) {
+    if (!value) return;
+    this.setState((s) => {
+      const training = Object.assign({}, s.training, { [key]: value });
+      if (training.end <= training.start) {
+        const p = training.start.split(':');
+        const d = new Date();
+        d.setHours(parseInt(p[0], 10) || 0, (parseInt(p[1], 10) || 0) + 90, 0, 0);
+        training.end = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+      }
+      this.put(Component.TRAIN_KEY, training);
+      return { training };
+    });
+  }
+
+  // First training start on a later day than the one given.
+  startAfterDay(ts) {
+    const sched = this.upcomingDates();
+    if (sched.length) {
+      const key = Component.dayKey(ts);
+      const next = sched.find((k) => k > key);
+      if (next) return this.startOn(next);
+    }
+    const from = new Date(ts).toDateString();
+    let t = ts;
+    let guard = 0;
+    while (new Date(t).toDateString() === from && guard < 14) {
+      const d = new Date(t);
+      d.setDate(d.getDate() + 1);
+      t = d.getTime();
+      guard += 1;
+    }
+    return t;
+  }
+
+  // The agreed plan for the evening currently in play, if training has not
+  // finished yet. Independent of the configured schedule.
+  // Everything the Settings panel can change, as one comparable value.
+  settingsSignature() {
+    return JSON.stringify([this.state.meta, this.state.coach, this.state.training,
+      this.state.trainingDates, this.state.locale, this.state.coachAges]);
+  }
+
+  planInPlay() {
+    const tr = this.state.training || Component.TRAIN_DEFAULT;
+    const end = this.atToday(tr.end, Component.TRAIN_DEFAULT.end);
+    const start = this.atToday(tr.start, Component.TRAIN_DEFAULT.start);
+    if (Date.now() > Math.max(start, end)) return null;
+    return this.activeFor(Component.dayKey(Date.now()));
+  }
+
+  plansFor(date) {
+    return (this.state.plans || []).filter((p) => p.date === date).sort((x, y) => x.createdAt - y.createdAt);
+  }
+
+  activeFor(date) {
+    return this.plansFor(date).find((p) => p.status === 'active') || null;
+  }
+
+  // Dates with a plan, soonest first, past evenings dropped.
+  planDates() {
+    const cutoff = Date.now() - 12 * Component.HOUR;
+    const seen = {};
+    (this.state.plans || []).forEach((p) => {
+      if (p.sessionAt < cutoff) return;
+      if (!seen[p.date] || p.sessionAt < seen[p.date]) seen[p.date] = p.sessionAt;
+    });
+    return Object.keys(seen).sort((a, b) => seen[a] - seen[b]);
+  }
+
+  isMine(p) {
+    if (!p) return false;
+    const c = this.coach;
+    if (!c.first && !c.last) return false;
+    return p.byFirst === c.first && p.byLast === c.last;
+  }
+
+  // Local notice log. Real push needs a server and APNs; this records the event
+  // and fires a device notification when the user has granted permission.
+  // Two distinct paths. `log` records what I did, for my own reference, and is
+  // never unread. `notify` is what arrives from another coach: it badges and
+  // fires a device notification. The backend will call the latter on the
+  // recipients' devices; locally only the log runs.
+  log(text) {
+    this.setState((s) => {
+      const notices = [{ id: 'n' + Date.now(), text, at: Date.now(), mine: true }].concat(s.notices || []).slice(0, 8);
+      this.put(Component.NOTICE_KEY, notices);
+      return { notices };
+    });
+  }
+
+  notify(text) {
+    this.setState((s) => {
+      const notices = [{ id: 'n' + Date.now(), text, at: Date.now(), mine: false }].concat(s.notices || []).slice(0, 8);
+      this.put(Component.NOTICE_KEY, notices);
+      return { notices };
+    });
+    try {
+      if (window.Notification && Notification.permission === 'granted') {
+        new Notification('The Coach', { body: text });
+      }
+    } catch (e) {}
+  }
+
+  // Last write wins: a new submission supersedes whatever was active for that
+  // date and takes the next version number. Nothing is deleted.
+  submitPlan(sessionDrills, name, note) {
+    const drills = sessionDrills.map((d) => [
+      Component.content(d, 'title'),
+      this._catOf ? (this._catOf[d.id] || '') : '',
+      this.minutesFor(d.id, this.state.durs),
+      d.id
+    ]);
+    if (!drills.length) return;
+    const at = this.state.submitAt || this.nextSessionStart();
+    const date = Component.dayKey(at);
+    const prior = this.activeFor(date);
+    const c = this.coach;
+    const mine = this.isMine(prior);
+    const title = (name || '').trim() || 'Session for ' + Component.dateWords(at);
+
+    if (prior && mine) {
+      // My own change is an edit, not a new version.
+      this.setState((s) => {
+        const plans = s.plans.map((p) => p.id === prior.id
+          ? Object.assign({}, p, { title, note: note || '', drills, editedAt: Date.now() })
+          : p);
+        this.put(Component.PLAN_KEY, plans);
+        return { plans, planStage: null, openPlan: prior.id, fromMsg: false };
+      });
+      this.log('You updated your session for ' + Component.dateWords(at) + '. The others have been told.');
+      return;
+    }
+
+    const version = this.plansFor(date).reduce((n, p) => Math.max(n, p.version || 0), 0) + 1;
+    const entry = {
+      id: 'p' + Date.now(), date, sessionAt: at, title, note: note || '', drills,
+      byFirst: c.first, byLast: c.last, initials: this.myInitials(),
+      createdAt: Date.now(), editedAt: null, version, status: 'active'
+    };
+    this.setState((s) => {
+      const plans = s.plans.map((p) => (p.date === date && p.status === 'active')
+        ? Object.assign({}, p, { status: 'superseded' })
+        : p).concat([entry]);
+      this.put(Component.PLAN_KEY, plans);
+      return { plans, planStage: null, openPlan: entry.id, fromMsg: false };
+    });
+    if (prior) {
+      this.log('You replaced ' + (prior.initials && prior.initials !== '??' ? prior.initials + "'s" : 'the previous') + ' session for ' + Component.dateWords(at) + '.');
+    } else {
+      this.log('You put up the session for ' + Component.dateWords(at) + '.');
+    }
+  }
+
+  // Load a plan's drills into my builder so I can edit or riff on it.
+  // Resolve a plan's drills to library ids: the stored id when present,
+  // otherwise a title match, so seeded and legacy plans still load.
+  resolvePlan(p) {
+    if (!p || !p.drills) return null;
+    const idx = this._idByTitle || {};
+    const out = [];
+    for (const d of p.drills) {
+      const id = d[3] || idx[String(d[0] || '').toLowerCase()];
+      if (!id) return null;
+      out.push([id, d[2]]);
+    }
+    return out;
+  }
+
+  loadPlan(p) {
+    const pairs = this.resolvePlan(p);
+    if (!pairs) return;
+    const ids = pairs.map((x) => x[0]);
+    this.setState((s) => {
+      const durs = Object.assign({}, s.durs);
+      pairs.forEach((x) => { durs[x[0]] = x[1]; });
+      this.persistSession(ids);
+      this.put(Component.DUR_KEY, durs);
+      return { session: ids, durs, inboxOpen: false, openPlan: null, planStage: null };
+    });
+    const i = (this.state.screens || []).findIndex((x) => x.type === 'session');
+    if (i > -1) this.goTo(i);
+  }
+
+  clearNotices() {
+    this.put(Component.NOTICE_KEY, []);
+    this.setState({ notices: [] });
   }
 
   static today() {
@@ -887,17 +1604,6 @@ class Component extends DCLogic {
     if (isNaN(d)) return '';
     return Component.fmtDate(d);
   }
-
-  static KIT_VOCAB = [
-    ['cones', /cone/],
-    ['balls', /ball/],
-    ['bibs', /bib/],
-    ['small goals', /small goal|cone goal/],
-    ['goals', /goal/],
-    ['keeper', /keeper|glove/]
-  ];
-
-  static NUMWORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
 
   static searchQuery(q) {
     let s = ' ' + String(q).toLowerCase().trim() + ' ';
@@ -952,8 +1658,6 @@ class Component extends DCLogic {
     return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
   }
 
-  static EMPTY_FILTERS = { ages: [], cats: [], diffs: [], kit: [], players: null, maxDur: null };
-
   static matches(d, f) {
     if (f.cats.length && f.cats.indexOf(d.category) < 0) return false;
     if (f.maxDur != null && (d.durationMinutes || 0) > f.maxDur) return false;
@@ -970,40 +1674,11 @@ class Component extends DCLogic {
     return true;
   }
 
-  static clock(sec) {
-    const s = Math.max(0, Math.round(sec));
-    return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
-  }
-
   static readList(key) {
     try {
       const raw = JSON.parse(localStorage.getItem(key) || '[]');
       return Array.isArray(raw) ? raw.filter((x) => typeof x === 'string') : [];
     } catch (e) { return []; }
-  }
-
-  state = {
-    cats: null, i: 0, favs: Component.readFavs(),
-    session: Component.readList(Component.SESSION_KEY),
-    justAdded: false,
-    onboarded: (function () { try { return localStorage.getItem(Component.ONBOARD_KEY) === '1'; } catch (e) { return true; } })(),
-    obStep: 0,
-    locale: (window.I18N ? window.I18N.locale : 'en'),
-    coachAges: Component.readList(Component.COACH_AGES_KEY),
-    meta: Component.readObj(Component.META_KEY, { name: '', age: '', players: 12, target: 60 }),
-    durs: Component.readObj(Component.DUR_KEY, {}),
-    endGame: Component.readObj(Component.EG_KEY, null),
-    saved: (function () { const v = Component.readObj(Component.SAVED_KEY, []); return Array.isArray(v) ? v : []; })(),
-    savedFlash: false, confirmClear: false, confirmDelete: null, openSaved: null,
-    dataConfirm: null, aboutOpen: false, privacyOpen: false,
-    shareFlash: false, sharedIn: false, pendingShare: null,
-    filters: Object.assign({}, Component.EMPTY_FILTERS), q: '',
-    run: null
-  };
-
-  put(key, value) {
-    try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {}
-    return value;
   }
 
   setMeta(patch) {
@@ -1016,6 +1691,18 @@ class Component extends DCLogic {
       const next = Math.min(60, Math.max(1, cur + step));
       return { durs: this.put(Component.DUR_KEY, Object.assign({}, s.durs, { [id]: next })) };
     });
+  }
+
+  put(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {}
+    return value;
+  }
+
+  static readObj(key, fallback) {
+    try {
+      const raw = JSON.parse(localStorage.getItem(key) || 'null');
+      return raw && typeof raw === 'object' ? raw : fallback;
+    } catch (e) { return fallback; }
   }
 
   migrateSaved() {
@@ -1445,6 +2132,7 @@ class Component extends DCLogic {
       c.drills.forEach((d) => screens.push({ type: 'drill', cat: c, drill: d }));
     });
     this.setState({ cats, screens, i: 0 }, () => {
+      this.seedRealDrills();
       this.migrateSaved();
       this.restoreRun(this.state.session.length);
       if (this._gotoSession) {
@@ -1472,7 +2160,41 @@ class Component extends DCLogic {
     } catch (e) { this.setState({ offlineReady: 'no' }); }
   }
 
+  // Seeded plans exist only to show the screen working; give them real drills
+  // from the library so they can be loaded into a session like any other plan.
+  seedRealDrills() {
+    if (Component.readObj(Component.PLAN_KEY, null)) return;
+    const cats = this.state.cats || [];
+    if (!cats.length) return;
+    const pick = (ci, di) => {
+      const c = cats[ci % cats.length];
+      const d = c && c.drills ? c.drills[di % c.drills.length] : null;
+      if (!d) return null;
+      return [Component.content(d, 'title'),
+        Component.content(c, 'short') || Component.content(c, 'title'),
+        d.durationMinutes || 10, d.id];
+    };
+    const sets = [[[0, 0], [1, 1], [3, 0], [4, 0]], [[0, 1], [2, 0], [3, 2], [4, 1]]];
+    const plans = (this.state.plans || []).map((p, n) => {
+      const drills = (sets[n] || sets[0]).map((x) => pick(x[0], x[1])).filter(Boolean);
+      return drills.length ? Object.assign({}, p, { drills }) : p;
+    });
+    this.setState({ plans });
+  }
+
+  // The voting model's keys are no longer read; clear them once so devices
+  // that ran the earlier build don't carry dead data.
+  static dropLegacyKeys() {
+    try {
+      ['u12-club-suggestions', 'u12-club-verdicts'].forEach((k) => {
+        if (localStorage.getItem(k) !== null) localStorage.removeItem(k);
+      });
+    } catch (e) {}
+  }
+
   componentDidMount() {
+    Component.dropLegacyKeys();
+    this.setState({ metaSnapshot: this.settingsSignature() });
     this.checkOfflineReady();
     // Translations can land after first paint in the bundled build.
     this._onI18nReady = () => this.forceUpdate();
@@ -1585,10 +2307,32 @@ class Component extends DCLogic {
   renderVals() {
     const { screens, cats, i, favs } = this.state;
     const cur = screens ? screens[i] : null;
+    const homeCardList = (cats || []).map((c) => ({
+      short: String(parseInt(c.num, 10)),
+      label: Component.content(c, 'short') || Component.content(c, 'title'),
+      count: Component.T('count.drills', { n: c.drills.length }),
+      go: () => this.goTo((screens || []).findIndex((s) => s.type === 'cat' && s.cat === c))
+    }));
     const isCat = !!cur && cur.type === 'cat';
     const isHome = !!cur && cur.type === 'home';
     const isFavScreen = !!cur && cur.type === 'favs';
     const isSessionScreen = !!cur && cur.type === 'session';
+    const isClub = !!this.state.inboxOpen;
+    const coach = this.coach;
+    const myInit = this.myInitials();
+    const dates = this.planDates();
+    const nextStart = this.nextSessionStart();
+    const submitAt = this.state.submitAt || nextStart;
+    const priorActive = this.activeFor(Component.dayKey(submitAt));
+    const openPlan = this.state.openPlan ? (this.state.plans || []).find((p) => p.id === this.state.openPlan) : null;
+    // The current plan for the next training evening, if there is one.
+    // Today's plan outranks the schedule: a session being played tonight must
+    // stay on Home even if tonight was never ticked in the calendar.
+    const planNow = this.planInPlay() || this.activeFor(Component.dayKey(nextStart));
+    // Only another coach's change counts as unread.
+    const unread = (this.state.notices || []).filter((n) => !n.mine).length;
+    const others = Math.max(0, (coach.count || 4) - 1);
+    const othersPhrase = others === 1 ? 'The other coach is' : 'The other ' + others + ' coaches are';
     const isEndGame = !!cur && cur.type === 'endgame';
     const d = cur && cur.drill;
     const allDrills = (cats || []).reduce((acc, c) => acc.concat(c.drills), []);
@@ -1603,6 +2347,11 @@ class Component extends DCLogic {
       catOf[dd.id] = Component.content(c, 'short') || Component.content(c, 'title');
       catFull[dd.id] = Component.content(c, 'title');
     }));
+    this._catOf = catOf;
+    this._idByTitle = this._idByTitle || {};
+    (cats || []).forEach((c) => c.drills.forEach((dd) => {
+      this._idByTitle[String(Component.content(dd, 'title')).toLowerCase()] = dd.id;
+    }));
     const SEP = Component.T('common.separator') || ' · ';
     const durs = this.state.durs, meta = this.state.meta, run = this.state.run;
     const sessionDrills = session.map((id) => byId[id]).filter(Boolean)
@@ -1610,6 +2359,28 @@ class Component extends DCLogic {
     const endGame = this.state.endGame || null;
     const egMins = endGame ? (endGame.mins || 0) : 0;
     const totalMins = sessionDrills.reduce((n, dd) => n + dd.mins, 0) + egMins;
+    const hasCurrent = sessionDrills.length > 0 || !!endGame;
+    const builderFor = planNow ? this.startAfterDay(planNow.sessionAt) : nextStart;
+    // Month grid, Monday first, six rows so the box never changes height.
+    const calCursor = this.state.calMonth ? new Date(this.state.calMonth) : new Date();
+    const firstOfMonth = new Date(calCursor.getFullYear(), calCursor.getMonth(), 1);
+    const lead = (firstOfMonth.getDay() + 6) % 7;
+    const todayKey = Component.dayKey(Date.now());
+    const calCells = Array.from({ length: 42 }, (_, n) => {
+      const d = new Date(calCursor.getFullYear(), calCursor.getMonth(), 1 + n - lead);
+      const key = Component.dayKey(d.getTime());
+      const inMonth = d.getMonth() === calCursor.getMonth();
+      const on = (this.state.trainingDates || []).indexOf(key) > -1;
+      const past = key < todayKey;
+      return {
+        label: String(d.getDate()),
+        bg: on ? 'var(--color-text)' : 'transparent',
+        ink: on ? '#fff' : (inMonth ? (past ? 'var(--color-neutral-400)' : 'var(--color-text)') : 'var(--color-neutral-300)'),
+        edge: on ? 'var(--color-text)' : (key === todayKey ? 'var(--color-text)' : 'var(--color-neutral-200)'),
+        weight: on || key === todayKey ? '800' : '400',
+        toggle: () => this.toggleTrainingDate(key)
+      };
+    });
     const diff = totalMins - (meta.target || 0);
     const seq = endGame ? sessionDrills.concat([{ id: '__endgame', title: Component.T('endgame.title'), category: '', mins: egMins, durationMinutes: egMins, equipment: [], setup: '', coachingPoints: '', instructions: [] }]) : sessionDrills;
     const runDrill = run ? seq[run.idx] : null;
@@ -1666,11 +2437,8 @@ class Component extends DCLogic {
       onName: (e) => this.setMeta({ name: e.target.value }),
       clubName: meta.club || '',
       onClub: (e) => this.setMeta({ club: e.target.value }),
-      todayLabel: Component.today(),
-      clubDateLabel: (meta.club || '').trim() ? (meta.club || '').trim() + ' · ' + Component.today() : 'Club + date',
-      clubDateDim: (meta.club || '').trim() ? '1' : '0.4',
-      useDate: () => this.setMeta({ name: Component.today() }),
-      useClubDate: () => { const c = (meta.club || '').trim(); if (c) this.setMeta({ name: c + ' · ' + Component.today() }); },
+      nextSessionLabel: 'Next training session · ' + Component.dayMonth(builderFor),
+      useNextSession: () => this.setMeta({ name: 'Next training session' }),
       players: String(meta.players || 0),
       playersDown: () => this.setMeta({ players: Math.max(1, (meta.players || 1) - 1) }),
       playersUp: () => this.setMeta({ players: Math.min(30, (meta.players || 0) + 1) }),
@@ -1701,6 +2469,175 @@ class Component extends DCLogic {
       clearLabel: Component.T(this.state.confirmClear ? 'session.clear_confirm' : 'session.clear'),
       clearInk: this.state.confirmClear ? 'var(--color-accent)' : 'var(--color-neutral-800)',
       onClear: () => this.clearSession(),
+      inboxOpen: isClub,
+      goClub: () => this.setState({ inboxOpen: true, settingsOpen: false, openPlan: null, planStage: null, fromMsg: false }),
+      hasCurrent: hasCurrent,
+      buildCtaLabel: hasCurrent
+        ? (run ? Component.T('home.session_in_progress') : ((meta.name || '').trim() || Component.T('home.current_session')))
+        : (planNow ? 'Build the next session' : Component.T('home.build_session')),
+      // Names the evening the builder is working towards, so a session started
+      // after tonight's plan is agreed is visibly for the next one.
+      buildCtaSub: hasCurrent
+        ? (Component.T('count.drills', { n: sessionDrills.length }) + SEP + Component.T('count.minutes', { n: totalMins })
+           + (Component.namesADate(meta.name) ? '' : SEP + 'for ' + Component.dateWords(builderFor)))
+        : (planNow ? 'For ' + Component.dateWords(builderFor) : ''),
+      buildCtaAction: hasCurrent ? Component.T(run ? 'run.resume' : 'home.continue') : '',
+      tonightSettled: !!planNow,
+      tonightKicker: planNow ? (Component.dateWords(planNow.sessionAt) === 'tonight' ? "Tonight's plan" : 'The plan for ' + Component.dateWords(planNow.sessionAt)) : '',
+      tonightMeta: planNow ? [(this.isMine(planNow) ? 'You' : planNow.initials) + ' ' + Component.clock(planNow.editedAt || planNow.createdAt),
+        Component.T('count.drills', { n: planNow.drills.length }),
+        Component.T('count.minutes', { n: planNow.drills.reduce((n, d) => n + d[2], 0) }),
+        this.state.training.start + '–' + this.state.training.end].join(SEP) : '',
+      // With an agreed plan in play, the builder is the secondary action.
+      buildCtaBorder: planNow ? '1px solid var(--color-neutral-300)' : '0',
+      buildCtaBg: planNow ? '#fff' : 'var(--color-accent)',
+      buildCtaHover: planNow ? 'var(--color-neutral-200)' : 'var(--color-accent-600)',
+      buildCtaInk: planNow ? 'var(--color-text)' : '#fff',
+      buildCtaSubInk: planNow ? 'var(--color-neutral-700)' : 'rgba(255,255,255,0.85)',
+      tonightTitle: planNow ? planNow.title : '',
+      openTonight: () => planNow && this.setState({ inboxOpen: true, settingsOpen: false, openPlan: planNow.id, planStage: null, fromMsg: false }),
+
+      calTitle: Component.MONTHS[calCursor.getMonth()] + ' ' + calCursor.getFullYear(),
+      calPrev: () => this.shiftMonth(-1),
+      calNext: () => this.shiftMonth(1),
+      calDayNames: ['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, n) => ({ label: d, key: n })),
+      calCells: calCells,
+      scheduleRows: this.upcomingDates().map((k) => {
+        const ts = this.startOn(k);
+        const d = new Date(ts);
+        return {
+          day: Component.ordinal(d.getDate()) + ' ' + Component.MONTHS[d.getMonth()].slice(0, 3),
+          weekday: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][d.getDay()],
+          when: Component.dateWords(ts),
+          remove: () => this.toggleTrainingDate(k)
+        };
+      }),
+      hasSchedule: this.upcomingDates().length > 0,
+      scheduleEmpty: this.upcomingDates().length === 0,
+      trainStart: this.state.training.start,
+      trainEnd: this.state.training.end,
+      trainingHint: 'Used to date each session you put up for the club.',
+      onTrainStart: (e) => this.setTraining('start', e.target.value),
+      onTrainEnd: (e) => this.setTraining('end', e.target.value),
+      coachFirst: coach.first,
+      coachLast: coach.last,
+      coachInitials: myInit,
+      coachCount: String(coach.count),
+      coachHint: (coach.first || coach.last)
+        ? 'Sessions you put up are tagged ' + myInit + '.'
+        : 'Add your name so the club knows whose session is whose.',
+      onCoachFirst: (e) => this.setCoach('first', e.target.value),
+      onCoachLast: (e) => this.setCoach('last', e.target.value),
+      coachesDown: () => this.setCoach('count', Math.max(2, (coach.count || 4) - 1)),
+      coachesUp: () => this.setCoach('count', Math.min(30, (coach.count || 4) + 1)),
+
+      clubName: Component.CLUB_NAME,
+      closeClub: () => this.setState({ inboxOpen: false, openPlan: null, planStage: null }),
+      clubBadge: String(unread),
+      clubBadgeShow: unread > 0,
+      notices: (this.state.notices || []).map((n) => ({
+        text: n.text,
+        dot: n.mine ? 'var(--color-neutral-300)' : 'var(--color-accent)',
+        bg: n.mine ? '#fff' : 'var(--color-neutral-100)'
+      })),
+      hasNotices: (this.state.notices || []).length > 0,
+      clearNotices: () => this.clearNotices(),
+      noticesClearLabel: unread > 0 ? 'Mark as read' : 'Clear activity',
+
+      planList: isClub && !this.state.openPlan && this.state.planStage !== 'confirm',
+      planConfirm: isClub && this.state.planStage === 'confirm',
+      planDetail: isClub && !!this.state.openPlan && this.state.planStage !== 'confirm',
+      listAnim: this.state.fromMsg ? 'msgInLeft 300ms cubic-bezier(.22,.61,.36,1)' : 'none',
+      clubBack: () => this.setState({ openPlan: null, planStage: null, fromMsg: true }),
+
+      canSubmit: isClub && !this.state.openPlan && this.state.planStage !== 'confirm' && sessionDrills.length > 0,
+      nothingToSubmit: isClub && !this.state.openPlan && this.state.planStage !== 'confirm' && sessionDrills.length === 0,
+      submitLabel: 'Put this up for ' + Component.dateWords(builderFor),
+      startSubmit: () => this.setState({ planStage: 'confirm', submitAt: builderFor, openPlan: null }),
+      cancelSubmit: () => this.setState({ planStage: null, fromMsg: true }),
+      noPlans: isClub && !this.state.openPlan && this.state.planStage !== 'confirm' && dates.length === 0,
+
+      planCards: dates.map((dk) => {
+        const p = this.activeFor(dk) || this.plansFor(dk).slice(-1)[0];
+        const all = this.plansFor(dk);
+        const live = p && p.status === 'active';
+        return {
+          date: Component.dateWords(p.sessionAt).replace(/^t/, 'T'),
+          status: live ? 'Current plan' : 'Superseded',
+          bandBg: live ? 'var(--color-accent)' : 'var(--color-neutral-200)',
+          bandInk: live ? '#fff' : 'var(--color-neutral-700)',
+          edge: live ? 'var(--color-accent)' : 'var(--color-neutral-300)',
+          avatarBg: live ? 'var(--color-accent)' : 'var(--color-neutral-200)',
+          avatarInk: live ? '#fff' : 'var(--color-text)',
+          initials: p.initials || '??',
+          title: p.title,
+          meta: [Component.T('count.drills', { n: p.drills.length }), Component.T('count.minutes', { n: p.drills.reduce((n, d) => n + d[2], 0) })].join(SEP),
+          byline: (this.isMine(p) ? 'You' : p.initials) + ' at ' + Component.clock(p.editedAt || p.createdAt) + (p.editedAt ? ' (edited)' : ''),
+          versionsLabel: all.length > 1 ? all.length + ' versions' : '1 version',
+          open: () => this.setState({ openPlan: p.id, planStage: null, fromMsg: false })
+        };
+      }),
+
+      confirmHeading: (priorActive && this.isMine(priorActive)) ? 'Update your session'
+        : (priorActive ? 'Replace the current plan?' : 'Put this up as the plan'),
+      confirmDate: Component.dateWords(submitAt).replace(/^t/, 'T') + ' · ' + this.state.training.start,
+      confirmReplaces: !!priorActive && !this.isMine(priorActive),
+      confirmReplaceNote: priorActive ? 'There is already a plan for this evening. Yours becomes the current one and theirs is kept in the history.' : '',
+      confirmTheirInitials: priorActive ? (priorActive.initials || '??') : '',
+      confirmTheirTitle: priorActive ? priorActive.title : '',
+      confirmTheirMeta: priorActive ? [priorActive.initials, Component.clock(priorActive.createdAt), Component.T('count.drills', { n: priorActive.drills.length })].join(SEP) : '',
+      viewTheirs: () => priorActive && this.setState({ openPlan: priorActive.id, planStage: null }),
+      confirmDefaultName: (priorActive && this.isMine(priorActive)) ? priorActive.title : '',
+      planNameRef: (el) => { this._planName = el; },
+      planNoteRef: (el) => { this._planNote = el; },
+      confirmCta: (priorActive && this.isMine(priorActive)) ? 'Update my session'
+        : (priorActive ? 'Replace and notify the club' : 'Put up the plan'),
+      confirmNamePlaceholder: 'Session for ' + Component.dateWords(submitAt),
+      needsName: !coach.first && !coach.last,
+      needsNameNote: 'Add your name in Settings so the club knows whose session this is.',
+      confirmFoot: (priorActive && this.isMine(priorActive))
+        ? 'This is your session, so it stays as one version. ' + othersPhrase + ' told it changed.'
+        : 'The club sees who put it up and when. Nobody has to approve it — ' + othersPhrase + ' notified.',
+      confirmSubmit: () => this.submitPlan(sessionDrills,
+        this._planName ? this._planName.value : '',
+        this._planNote ? this._planNote.value : ''),
+
+      detStatus: openPlan ? (openPlan.status === 'active' ? 'Current plan' : 'Superseded') : '',
+      detBandBg: (openPlan && openPlan.status === 'active') ? 'var(--color-accent)' : 'var(--color-neutral-200)',
+      detBandInk: (openPlan && openPlan.status === 'active') ? '#fff' : 'var(--color-neutral-700)',
+      detDate: openPlan ? Component.dateWords(openPlan.sessionAt).replace(/^t/, 'T') : '',
+      detInitials: openPlan ? (openPlan.initials || '??') : '',
+      detTitle: openPlan ? openPlan.title : '',
+      detByline: openPlan ? ((this.isMine(openPlan) ? 'You' : (openPlan.byFirst + ' ' + openPlan.byLast).trim() || openPlan.initials)
+        + ' · ' + Component.clock(openPlan.editedAt || openPlan.createdAt)
+        + (openPlan.editedAt ? ' · edited' : '') + ' · v' + (openPlan.version || 1)) : '',
+      detNote: openPlan ? (openPlan.note || '') : '',
+      detDrills: openPlan ? openPlan.drills.map((d, n) => ({
+        order: String(n + 1).padStart(2, '0'), name: d[0], cat: d[1],
+        mins: Component.T('count.minutes', { n: d[2] })
+      })) : [],
+      detTotal: openPlan ? Component.T('count.minutes', { n: openPlan.drills.reduce((n, d) => n + d[2], 0) }) : '',
+      detMine: !!openPlan && this.isMine(openPlan),
+      detCanCopy: !!openPlan && !this.isMine(openPlan) && !!this.resolvePlan(openPlan),
+      detUseLabel: openPlan ? 'Use this plan for ' + Component.dateWords(openPlan.sessionAt) : '',
+      editPlan: () => this.loadPlan(openPlan),
+      copyPlan: () => this.loadPlan(openPlan),
+
+      historyOpen: !!this.state.historyOpen,
+      toggleHistory: () => this.setState((s) => ({ historyOpen: !s.historyOpen })),
+      historyToggleLabel: openPlan ? (this.plansFor(openPlan.date).length + ' versions for this evening') : '',
+      historyChevron: this.state.historyOpen ? 'rotate(180deg)' : 'none',
+      history: openPlan ? this.plansFor(openPlan.date).slice().reverse().map((p, i) => ({
+        initials: p.initials || '??',
+        title: p.title,
+        stamp: Component.clock(p.editedAt || p.createdAt) + (p.editedAt ? ' · edited' : '') + ' · v' + (p.version || 1),
+        current: p.status === 'active',
+        dotBg: p.status === 'active' ? 'var(--color-accent)' : '#fff',
+        lineBg: i === this.plansFor(openPlan.date).length - 1 ? 'transparent' : 'var(--color-neutral-300)',
+        avBg: p.status === 'active' ? 'var(--color-accent)' : 'var(--color-neutral-200)',
+        avInk: p.status === 'active' ? '#fff' : 'var(--color-text)'
+      })) : [],
+
       isSavedScreen: isSaved,
       goSaved: () => this.goTo(screens.findIndex((s) => s.type === 'saved')),
       savedSummary: Component.T('count.sessions', { n: this.state.saved.length }),
@@ -1814,9 +2751,11 @@ class Component extends DCLogic {
       appVersion: Component.VERSION,
       offlineLabel: Component.T('settings.offline'),
       offlineValue: Component.T('settings.offline_' + (this.state.offlineReady || 'checking')),
-      surfaceShift: this.state.settingsOpen ? 'translateX(calc(-100% + 64px))' : 'translateX(0)',
-      settingsDoneLabel: Component.T(JSON.stringify(meta) !== this.state.metaSnapshot ? 'settings.save_close' : 'settings.close'),
-      goSettings: () => this.setState((s) => ({ settingsOpen: !s.settingsOpen, metaSnapshot: JSON.stringify(s.meta) })),
+      surfaceShadow: this.state.inboxOpen ? '-18px 0 44px rgba(0,0,0,0.30)' : '18px 0 44px rgba(0,0,0,0.30)',
+      surfaceShift: this.state.settingsOpen ? 'translateX(calc(-100% + 40px))'
+        : (this.state.inboxOpen ? 'translateX(calc(100% - 40px))' : 'translateX(0)'),
+      settingsDoneLabel: Component.T(this.settingsSignature() !== this.state.metaSnapshot ? 'settings.save_close' : 'settings.close'),
+      goSettings: () => this.setState((s) => ({ settingsOpen: !s.settingsOpen, inboxOpen: false }), () => this.setState({ metaSnapshot: this.settingsSignature() })),
       closeSettings: () => this.setState({ settingsOpen: false }),
       showOnboarding: !this.state.onboarded,
       obStep1: this.state.obStep === 0,
@@ -1874,12 +2813,9 @@ class Component extends DCLogic {
       drillFavStroke: dFav ? 'var(--color-accent)' : 'var(--color-neutral-700)',
       drillFavLabel: Component.T(dFav ? 'favourites.remove' : 'favourites.add'),
       toggleDrillFav: () => { if (d) this.toggleFav(d.id); },
-      homeCards: (cats || []).map((c) => ({
-        short: String(parseInt(c.num, 10)),
-        label: Component.content(c, 'short') || Component.content(c, 'title'),
-        count: Component.T('count.drills', { n: c.drills.length }),
-        go: () => this.goTo(screens.findIndex((s) => s.type === 'cat' && s.cat === c))
-      })),
+      homeCards: homeCardList.filter((c, n) => !(n === homeCardList.length - 1 && homeCardList.length % 2 === 1)),
+      homeWideCards: homeCardList.length % 2 === 1 ? homeCardList.slice(-1) : [],
+      endGameNum: String((cats || []).length + 1).padStart(2, '0'),
       crumb: cur && cur.cat ? cur.cat.num + ' / ' + cur.cat.title : Component.T('app.title'),
       counter: screens ? i + 1 + ' of ' + screens.length : '',
       progress: screens ? ((i + 1) / screens.length * 100).toFixed(1) + '%' : '0%',
@@ -1911,10 +2847,6 @@ class Component extends DCLogic {
       })),
       goHome: () => this.goTo(0),
       zoomAnim: this.state.zoom || 'none',
-      hasCurrent: sessionDrills.length > 0 || !!endGame,
-      currentTitle: run ? Component.T('home.session_in_progress') : ((meta.name || '').trim() || Component.T('home.current_session')),
-      currentMeta: Component.T('count.drills', { n: sessionDrills.length }) + SEP + Component.T('count.minutes', { n: totalMins }),
-      continueLabel: Component.T(run ? 'run.resume' : 'home.continue'),
       q: this.state.q,
       onSearch: (e) => this.setState({ q: e.target.value }),
       clearSearch: () => this.setState({ q: '' }),

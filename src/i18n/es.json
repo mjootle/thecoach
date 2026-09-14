@@ -112,7 +112,13 @@
     "next_drill": "Siguiente ejercicio",
     "end": "Terminar sesión",
     "resume": "Reanudar",
-    "intro": "{n} ejercicios. Desliza o pulsa siguiente para recorrerlos."
+    "intro": {
+
+      "one": "{n} ejercicio. Desliza o pulsa siguiente para recorrerlo.",
+
+      "other": "{n} ejercicios. Desliza o pulsa siguiente para recorrerlos."
+
+    }
   },
   "settings": {
     "title": "Ajustes",
@@ -126,6 +132,21 @@
     "target_length": "Duración objetivo de la sesión",
     "save_close": "Guardar y cerrar",
     "close": "Cerrar",
+    "your_name": "Tu nombre",
+    "first_name": "Nombre",
+    "last_name": "Apellido",
+    "coaches": "Entrenadores del club",
+    "fewer_coaches": "Menos entrenadores",
+    "more_coaches": "Más entrenadores",
+    "schedule": "Calendario de entrenamientos",
+    "schedule_hint": "Marca los días con entrenamiento. La app calcula la próxima sesión.",
+    "schedule_empty": "Aún no has marcado días.",
+    "prev_month": "Mes anterior",
+    "next_month": "Mes siguiente",
+    "remove_date": "Quitar esta fecha",
+    "training_time": "Horario habitual de entrenamiento",
+    "starts": "Empieza",
+    "ends": "Termina",
     "coach_ages": "Categorías que entrenas",
     "show_welcome": "Ver la bienvenida otra vez",
     "none_selected": "Ninguna seleccionada",

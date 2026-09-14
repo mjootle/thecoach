@@ -9,7 +9,7 @@
    already inside the single-file document, so this worker is all that stands
    between the app and a pitch with no signal. */
 
-const VERSION = 'coach-v1';
+const VERSION = 'coach-v2';
 const SHELL = 'coach-shell-' + VERSION;
 const FONTS = 'coach-fonts-' + VERSION;
 

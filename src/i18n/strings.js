@@ -116,7 +116,13 @@ window.U12_I18N = {
    "next_drill": "Next drill",
    "end": "End session",
    "resume": "Resume",
-   "intro": "{n} drills. Swipe or press next to work through them."
+   "intro": {
+
+     "one": "{n} drill. Swipe or press next to work through it.",
+
+     "other": "{n} drills. Swipe or press next to work through them."
+
+   }
   },
   "settings": {
    "title": "Settings",
@@ -130,6 +136,21 @@ window.U12_I18N = {
    "target_length": "Target session length",
    "save_close": "Save & close",
    "close": "Close",
+   "your_name": "Your name",
+   "first_name": "First name",
+   "last_name": "Last name",
+   "coaches": "Coaches at the club",
+   "fewer_coaches": "Fewer coaches",
+   "more_coaches": "More coaches",
+   "schedule": "Training schedule",
+   "schedule_hint": "Tap the days training is on. The app works out the next session from these.",
+   "schedule_empty": "No training days selected yet.",
+   "prev_month": "Previous month",
+   "next_month": "Next month",
+   "remove_date": "Remove this date",
+   "training_time": "Regular training time",
+   "starts": "Starts",
+   "ends": "Ends",
    "coach_ages": "Age groups you coach",
    "show_welcome": "Show welcome again",
    "none_selected": "None selected",
@@ -387,6 +408,21 @@ window.U12_I18N = {
    "target_length": "Duración objetivo de la sesión",
    "save_close": "Guardar y cerrar",
    "close": "Cerrar",
+   "your_name": "Tu nombre",
+   "first_name": "Nombre",
+   "last_name": "Apellido",
+   "coaches": "Entrenadores del club",
+   "fewer_coaches": "Menos entrenadores",
+   "more_coaches": "Más entrenadores",
+   "schedule": "Calendario de entrenamientos",
+   "schedule_hint": "Marca los días con entrenamiento. La app calcula la próxima sesión.",
+   "schedule_empty": "Aún no has marcado días.",
+   "prev_month": "Mes anterior",
+   "next_month": "Mes siguiente",
+   "remove_date": "Quitar esta fecha",
+   "training_time": "Horario habitual de entrenamiento",
+   "starts": "Empieza",
+   "ends": "Termina",
    "coach_ages": "Categorías que entrenas",
    "show_welcome": "Ver la bienvenida otra vez",
    "none_selected": "Ninguna seleccionada",
